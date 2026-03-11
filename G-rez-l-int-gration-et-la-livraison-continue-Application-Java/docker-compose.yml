@@ -1,6 +1,8 @@
 services:
 
   app:
+    build:
+      context: .
     image: workshop-organizer
     ports:
       - "8080:8080"

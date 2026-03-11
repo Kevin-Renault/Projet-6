@@ -1,0 +1,54 @@
+services:
+  db:
+    container_name: workshop-db
+    image: postgres:13
+    environment:
+      POSTGRES_USER: workshops_user
+      POSTGRES_PASSWORD: oc2024
+      POSTGRES_DB: workshopsdb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U workshops_user" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  back:
+    container_name: workshop-back
+    image: workshop-organizer
+    build:
+      context: ./G-rez-l-int-gration-et-la-livraison-continue-Application-Java
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/workshopsdb"
+      SPRING_DATASOURCE_USERNAME: workshops_user
+      SPRING_DATASOURCE_PASSWORD: oc2024
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  front:
+    container_name: workshop-front
+    image: workshop-front
+    build:
+      context: ./G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
+    ports:
+      - "80:80"
+    depends_on:
+      back:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db-data:
