@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  front:
+    container_name: workshop-front
+    image: workshop-front
+    build: .
+    ports:
+      - "80:80"
+    # Optionnel : variables d'environnement, volumes, etc.
