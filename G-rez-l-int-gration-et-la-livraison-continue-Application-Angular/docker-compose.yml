@@ -6,4 +6,9 @@ services:
     build: .
     ports:
       - "80:80"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     # Optionnel : variables d'environnement, volumes, etc.
