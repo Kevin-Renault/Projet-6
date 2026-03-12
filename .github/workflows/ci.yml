@@ -28,7 +28,7 @@ jobs:
       # --- Test (docker-compose) ---
       - name: Build and run backend tests (docker-compose)
         run: |
-          docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml up --build --abort-on-container-exit --exit-code-from app || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml logs
+          docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml up --build --abort-on-container-exit --exit-code-from app || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml logs
 
       # --- Results ---
       - name: Upload backend test results
@@ -58,7 +58,7 @@ jobs:
       # --- Test (docker-compose) ---
       - name: Build and run frontend tests (docker-compose)
         run: |
-          docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml up --build --abort-on-container-exit --exit-code-from front || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml logs
+          docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml up --build --abort-on-container-exit --exit-code-from front || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml logs
 
       # --- Results ---
       - name: Upload frontend test results
