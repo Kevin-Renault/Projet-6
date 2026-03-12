@@ -7,17 +7,14 @@ on:
     branches: [ '**' ]
 
 jobs:
-  test:
+  backend:
+    name: Backend (Java)
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        app:
-          - G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
-          - G-rez-l-int-gration-et-la-livraison-continue-Application-Java
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # --- Setup ---
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -28,32 +25,49 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Node.js (for Angular)
-        if: matrix.app == 'G-rez-l-int-gration-et-la-livraison-continue-Application-Angular'
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Set up Java (for Java)
-        if: matrix.app == 'G-rez-l-int-gration-et-la-livraison-continue-Application-Java'
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-
-      - name: Run tests
+      # --- Test (docker-compose) ---
+      - name: Build and run backend tests (docker-compose)
         run: |
-          chmod +x ./run-tests.sh
-          ./run-tests.sh
+          docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml up --build --abort-on-container-exit --exit-code-from app || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml logs
 
-      - name: Upload test results
+      # --- Results ---
+      - name: Upload backend test results
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-${{ matrix.app }}
-          path: test-results/*.xml
+          name: test-results-backend
+          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build/test-results/test/*.xml
 
-      - name: Upload coverage report (Angular only)
-        if: matrix.app == 'G-rez-l-int-gration-et-la-livraison-continue-Application-Angular'
+  frontend:
+    name: Frontend (Angular)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # --- Setup ---
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # --- Test (docker-compose) ---
+      - name: Build and run frontend tests (docker-compose)
+        run: |
+          docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml up --build --abort-on-container-exit --exit-code-from front || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml logs
+
+      # --- Results ---
+      - name: Upload frontend test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-frontend
+          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/reports/*.xml
+
+      - name: Upload coverage report (Angular)
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report-angular
