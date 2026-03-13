@@ -1,5 +1,10 @@
 
 #!/bin/bash
+
+# Nettoyage des anciens rapports
+rm -rf test-results/
+rm -rf G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/
+rm -rf G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/reports/
 # Script pour lancer les tests backend (Java) et frontend (Angular)
 # et générer des rapports JUnit XML pour GitHub Actions
 
