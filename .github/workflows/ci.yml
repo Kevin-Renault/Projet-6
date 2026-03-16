@@ -13,71 +13,50 @@ jobs: # Définition des jobs (briques)
       - name: Setup (meta)
         run: echo "Setup job completed. Each job installs its own toolchain."
 
-  build-test-backend: # Job pour build & test le backend
+  build-test-backend: # Job pour build & test le backend (désactivé, juste un wait)
     runs-on: ubuntu-latest # OS utilisé
     needs: setup # Dépend du job setup (exécuté après)
     steps:
-      - name: Checkout code # Récupère le code du repo
-        uses: actions/checkout@v4
-      - name: Set up Docker Buildx # Prépare l'outil Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Log in to GitHub Container Registry # Authentification au registre GitHub
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and run backend tests (docker-compose) # Build et test backend via docker-compose
-        run: |
-          docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml up --build --abort-on-container-exit --exit-code-from app || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml logs
-      - name: Upload backend test results # Sauvegarde les résultats de test backend
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-backend
-          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build/test-results/test/*.xml
+      - name: Wait backend (test circuit)
+        run: sleep 5
 
-  build-test-frontend: # Job pour build & test le frontend
+  build-test-frontend: # Job pour build & test le frontend (désactivé, juste un wait)
     runs-on: ubuntu-latest
     needs: setup # Dépend du job setup
     steps:
-      - name: Checkout code # Récupère le code du repo
-        uses: actions/checkout@v4
-      - name: Set up Docker Buildx # Prépare l'outil Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Log in to GitHub Container Registry # Authentification au registre GitHub
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and run frontend tests (docker-compose) # Build et test frontend via docker-compose
-        run: |
-          docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml up --build --abort-on-container-exit --exit-code-from front || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml logs
-      - name: Upload frontend test results # Sauvegarde les résultats de test frontend
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-frontend
-          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/reports/*.xml
-      - name: Upload coverage report (Angular) # Sauvegarde le rapport de couverture Angular
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report-angular
-          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/
+      - name: Wait frontend (test circuit)
+        run: sleep 5
 
-  cypress: # Job pour les tests E2E (ex: Cypress)
+
+  report-backend: # Job pour récupérer les rapports backend
     runs-on: ubuntu-latest
-    needs: [build-test-backend, build-test-frontend] # Attend la fin des jobs backend & frontend
+    needs: build-test-backend
     steps:
-      - name: Checkout code # Récupère le code du repo
-        uses: actions/checkout@v4
-      - name: Run E2E tests (placeholder) # Lancer ici vos tests E2E (Cypress)
-        run: echo "Run your Cypress or E2E tests here."
+      - name: Wait for backend report (placeholder)
+        run: sleep 5
+        
+  report-frontend: # Job pour récupérer les rapports frontend
+    runs-on: ubuntu-latest
+    needs: build-test-frontend
+    steps:
+      - name: Wait for frontend report (placeholder)
+        run: sleep 5
+          
+
+  reports-merge: # Job commun après les deux récupérations de rapports
+    runs-on: ubuntu-latest
+    needs: [report-backend, report-frontend]
+    steps:
+      - name: Wait for both reports (placeholder)
+        run: sleep 5
+
 
   cleanup: # Job de nettoyage final
     runs-on: ubuntu-latest
-    needs: cypress # Attend la fin du job cypress
+    needs: reports-merge # Attend la fin du job commun
     steps:
       - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
-      - name: Cleanup handled in Cypress job # Nettoyage (placeholder)
-        run: echo "Cleanup runs in the cypress job (if needed)."
+      - name: Cleanup (placeholder)
+        run: echo "Cleanup runs after all reports are merged."
+

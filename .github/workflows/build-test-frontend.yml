@@ -1,0 +1,31 @@
+name: Build Test Frontend
+
+on: [workflow_call]
+
+jobs:
+  build-test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code # Récupère le code du repo
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx # Prépare l'outil Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to GitHub Container Registry # Authentification au registre GitHub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and run frontend tests (docker-compose) # Build et test frontend via docker-compose
+        run: |
+          docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml up --build --abort-on-container-exit --exit-code-from front || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml logs
+      - name: Upload frontend test results # Sauvegarde les résultats de test frontend
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-frontend
+          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/reports/*.xml
+      - name: Upload coverage report (Angular) # Sauvegarde le rapport de couverture Angular
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-angular
+          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/
