@@ -1,74 +1,83 @@
-name: CI
+name: CI Modular # Nom du workflow affiché dans GitHub Actions
 
-on:
-  push:
-    branches: [ '**' ]
-  pull_request:
-    branches: [ '**' ]
+on: # Déclencheurs du workflow
+  push: # Sur chaque push
+    branches: [ '**' ] # Toutes les branches
+  pull_request: # Sur chaque pull request
+    branches: [ '**' ] # Toutes les branches
 
-jobs:
-  backend:
-    name: Backend (Java)
-    runs-on: ubuntu-latest
+jobs: # Définition des jobs (briques)
+  setup: # Job d'initialisation, parent des autres jobs
+    runs-on: ubuntu-latest # OS utilisé pour ce job
     steps:
-      - name: Checkout code
+      - name: Setup (meta)
+        run: echo "Setup job completed. Each job installs its own toolchain."
+
+  build-test-backend: # Job pour build & test le backend
+    runs-on: ubuntu-latest # OS utilisé
+    needs: setup # Dépend du job setup (exécuté après)
+    steps:
+      - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
-
-      # --- Setup ---
-      - name: Set up Docker Buildx
+      - name: Set up Docker Buildx # Prépare l'outil Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
+      - name: Log in to GitHub Container Registry # Authentification au registre GitHub
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      # --- Test (docker-compose) ---
-      - name: Build and run backend tests (docker-compose)
+      - name: Build and run backend tests (docker-compose) # Build et test backend via docker-compose
         run: |
           docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml up --build --abort-on-container-exit --exit-code-from app || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml logs
-
-      # --- Results ---
-      - name: Upload backend test results
+      - name: Upload backend test results # Sauvegarde les résultats de test backend
         uses: actions/upload-artifact@v4
         with:
           name: test-results-backend
           path: G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build/test-results/test/*.xml
 
-  frontend:
-    name: Frontend (Angular)
+  build-test-frontend: # Job pour build & test le frontend
     runs-on: ubuntu-latest
+    needs: setup # Dépend du job setup
     steps:
-      - name: Checkout code
+      - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
-
-      # --- Setup ---
-      - name: Set up Docker Buildx
+      - name: Set up Docker Buildx # Prépare l'outil Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
+      - name: Log in to GitHub Container Registry # Authentification au registre GitHub
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      # --- Test (docker-compose) ---
-      - name: Build and run frontend tests (docker-compose)
+      - name: Build and run frontend tests (docker-compose) # Build et test frontend via docker-compose
         run: |
           docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml up --build --abort-on-container-exit --exit-code-from front || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml logs
-
-      # --- Results ---
-      - name: Upload frontend test results
+      - name: Upload frontend test results # Sauvegarde les résultats de test frontend
         uses: actions/upload-artifact@v4
         with:
           name: test-results-frontend
           path: G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/reports/*.xml
-
-      - name: Upload coverage report (Angular)
+      - name: Upload coverage report (Angular) # Sauvegarde le rapport de couverture Angular
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report-angular
           path: G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/
+
+  cypress: # Job pour les tests E2E (ex: Cypress)
+    runs-on: ubuntu-latest
+    needs: [build-test-backend, build-test-frontend] # Attend la fin des jobs backend & frontend
+    steps:
+      - name: Checkout code # Récupère le code du repo
+        uses: actions/checkout@v4
+      - name: Run E2E tests (placeholder) # Lancer ici vos tests E2E (Cypress)
+        run: echo "Run your Cypress or E2E tests here."
+
+  cleanup: # Job de nettoyage final
+    runs-on: ubuntu-latest
+    needs: cypress # Attend la fin du job cypress
+    steps:
+      - name: Checkout code # Récupère le code du repo
+        uses: actions/checkout@v4
+      - name: Cleanup handled in Cypress job # Nettoyage (placeholder)
+        run: echo "Cleanup runs in the cypress job (if needed)."
