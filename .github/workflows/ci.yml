@@ -26,8 +26,6 @@ jobs: # Définition des jobs (briques)
     uses: ./.github/workflows/build-test-frontend.yml
     needs: setup
     secrets: inherit
-    with:
-      # Ajoute ici des paramètres si besoin
 
 
 
