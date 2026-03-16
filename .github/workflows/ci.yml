@@ -42,14 +42,8 @@ jobs: # Définition des jobs (briques)
     needs: build-test-frontend
     if: always()
     steps:
-      - name: Wait for frontend container to finish
-        run: |
-          # Attendre que le conteneur 'front' soit terminé
-          until [ "$(docker inspect -f '{{.State.Status}}' front 2>/dev/null)" = "exited" ]; do
-            echo "Attente de la fin du conteneur front..."
-            sleep 2
-          done
-          echo "Conteneur front terminé."
+      - name: Wait for frontend report (placeholder)
+        run: sleep 5
           
 
   reports-merge: # Job commun après les deux récupérations de rapports
