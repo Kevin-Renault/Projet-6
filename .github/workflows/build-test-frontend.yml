@@ -19,6 +19,13 @@ jobs:
       - name: Build and run frontend tests (docker-compose) # Build et test frontend via docker-compose
         run: |
           docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml up --build --abort-on-container-exit --exit-code-from front || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml logs
+      - name: Wait for frontend container to finish
+        run: |
+          until [ "$(docker inspect -f '{{.State.Status}}' front 2>/dev/null)" = "exited" ]; do
+            echo "Attente de la fin du conteneur front..."
+            sleep 2
+          done
+          echo "Conteneur front terminé."
       - name: Upload frontend test results # Sauvegarde les résultats de test frontend
         uses: actions/upload-artifact@v4
         with:
