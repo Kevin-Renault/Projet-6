@@ -16,14 +16,10 @@ jobs: # Définition des jobs (briques)
   build-test-backend: # Job pour build & test le backend (réel)
     uses: ./.github/workflows/build-test-backend.yml
     needs: setup
-    secrets:
-      CI-ACTION-TOKEN: ${{ secrets.CI-ACTION-TOKEN }}
 
   build-test-frontend:
     uses: ./.github/workflows/build-test-frontend.yml
     needs: setup
-    secrets: 
-      CI-ACTION-TOKEN: ${{ secrets.CI-ACTION-TOKEN }}
 
   build-and-push-frontend:
     runs-on: ubuntu-latest # Utilise l'image Ubuntu pour le runner
