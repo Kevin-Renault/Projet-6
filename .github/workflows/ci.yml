@@ -40,13 +40,14 @@ jobs: # Définition des jobs (briques)
     steps:
       - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
-      - name: Vérification du token github_actions
-        run: '[ -n "${{ secrets.GITHUB_ACTIONS  }}" ] && echo "Token présent" || echo "Token absent"'
+      - name: Vérification du token ACTIONS_TOKEN
+        run: '[ -n "${{ secrets.ACTIONS_TOKEN  }}" ] && echo "Token présent" || echo "Token absent"'
 
       - name: Vérification du token github_actions
         run: |
-          if [ -z "${{ secrets.GITHUB_ACTIONS  }}" ]; then
-            echo "Erreur : Le token github_actions est absent."
+          echo "Valeur du secret : '${{ secrets.ACTIONS_TOKEN }}'
+          if [ -z "${{ secrets.ACTIONS_TOKEN  }}" ]; then
+            echo "Erreur : Le token ACTIONS_TOKEN est absent."
             exit 1
           else
             echo "Token présent."
@@ -58,7 +59,7 @@ jobs: # Définition des jobs (briques)
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.CI-ACTION-TOKEN }}
+          password: ${{ secrets.ACTIONS_TOKEN }}
       - name: Build and run frontend tests (docker-compose) # Build et test frontend via docker-compose
         run: |
           docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml up --build --abort-on-container-exit --exit-code-from tests || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml logs
