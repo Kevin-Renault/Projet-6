@@ -53,12 +53,14 @@ jobs: # Définition des jobs (briques)
           password: ${{ secrets.GITHUB_TOKEN }} # Utilise le token GitHub
       - name: Build Docker image # Build l'image Docker frontend
         run: |
+          REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           TAG=frontend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
-          docker build -t ghcr.io/${{ github.repository }}:$TAG G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
+          docker build -t ghcr.io/$REPO:$TAG G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
       - name: Push Docker image # Pousse l'image Docker vers le registre GitHub
         run: |
+          REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           TAG=frontend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
-          docker push ghcr.io/${{ github.repository }}:$TAG
+          docker push ghcr.io/$REPO:$TAG
 
   report-backend: # Job pour récupérer les rapports backend
     runs-on: ubuntu-latest
