@@ -41,12 +41,12 @@ jobs: # Définition des jobs (briques)
       - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
       - name: Vérification du token github_actions
-        run: '[ -n "${{ secrets.github_actions }}" ] && echo "Token présent" || echo "Token absent"'
+        run: '[ -n "${{ secrets.GITHUB_ACTIONS  }}" ] && echo "Token présent" || echo "Token absent"'
 
       - name: Vérification du token github_actions
         run: |
-          if [ -z "${{ secrets.github_actions }}" ]; then
-            echo "Erreur : Le token CI_ACTION_TOKEN est absent."
+          if [ -z "${{ secrets.GITHUB_ACTIONS  }}" ]; then
+            echo "Erreur : Le token github_actions est absent."
             exit 1
           else
             echo "Token présent."
