@@ -87,7 +87,7 @@ jobs: # Définition des jobs (briques)
         with:
           registry: ghcr.io # Spécifie le registre
           username: ${{ github.actor }} # Utilise l'utilisateur GitHub
-          password: ${{ secrets.CI-ACTION-TOKEN }} # Utilise le token GitHub
+          password: ${{ secrets.ACTIONS_TOKEN }} # Utilise le token GitHub
       - name: Build Docker image # Build l'image Docker frontend
         run: |
           REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
