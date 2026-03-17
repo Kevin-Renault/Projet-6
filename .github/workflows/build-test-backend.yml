@@ -18,7 +18,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and run backend tests (docker-compose) # Build et test backend via docker-compose
         run: |
-          docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml up --build --abort-on-container-exit --exit-code-from app || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml logs
+          docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml up --build --abort-on-container-exit --exit-code-from app || docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml logs
       - name: Upload backend test results # Sauvegarde les résultats de test backend
         uses: actions/upload-artifact@v4
         with:
