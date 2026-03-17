@@ -13,6 +13,8 @@ jobs: # Définition des jobs (briques)
       - name: Setup (meta)
         run: echo "Setup job completed. Each job installs its own toolchain."
 
+      
+
   build-test-backend: # Job pour build & test le backend (réel)
     runs-on: ubuntu-latest # OS utilisé
     needs: setup # Dépend du job setup (exécuté après)
@@ -38,6 +40,8 @@ jobs: # Définition des jobs (briques)
     steps:
       - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
+      - name: Vérification du token CI-ACTION-TOKEN
+        run: '[ -n "${{ secrets.CI-ACTION-TOKEN }}" ] && echo "Token présent" || echo "Token absent"'
       - name: Set up Docker Buildx # Prépare l'outil Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Log in to GitHub Container Registry # Authentification au registre GitHub
