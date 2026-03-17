@@ -35,7 +35,6 @@ jobs: # Définition des jobs (briques)
   build-test-frontend:
     uses: ./.github/workflows/build-test-frontend.yml
     needs: setup
-    secrets: inherit
 
   build-and-push-frontend:
     runs-on: ubuntu-latest # Utilise l'image Ubuntu pour le runner
