@@ -17,6 +17,8 @@ services:
     working_dir: /app
     volumes:
       - ./:/app
-    command: sh -c "npm ci && npm test -- --watch=false --browsers=ChromeHeadless"
+    environment:
+      - CHROME_BIN=/usr/bin/google-chrome
+    command: sh -c "npm ci && npm install google-chrome-stable --no-save && npm test -- --watch=false --browsers=ChromeHeadless"
     depends_on:
       - front

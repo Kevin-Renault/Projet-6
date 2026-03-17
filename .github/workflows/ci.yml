@@ -19,6 +19,8 @@ jobs: # Définition des jobs (briques)
     steps:
       - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
+      - name: Set gradlew executable
+        run: chmod +x G-rez-l-int-gration-et-la-livraison-continue-Application-Java/gradlew
       - name: Run backend tests (Java)
         run: |
           cd G-rez-l-int-gration-et-la-livraison-continue-Application-Java
