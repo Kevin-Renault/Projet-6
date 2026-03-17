@@ -15,7 +15,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.CI-ACTION-TOKEN }}
       - name: Build and run backend tests (docker-compose) # Build et test backend via docker-compose
         run: |
           docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml up --build --abort-on-container-exit --exit-code-from app || docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Java/docker-compose.yml logs
