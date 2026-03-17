@@ -14,27 +14,16 @@ jobs: # Définition des jobs (briques)
         run: echo "Setup job completed. Each job installs its own toolchain."
 
   build-test-backend: # Job pour build & test le backend (réel)
-    runs-on: ubuntu-latest # OS utilisé
-    needs: setup # Dépend du job setup (exécuté après)
-    steps:
-      - name: Checkout code # Récupère le code du repo
-        uses: actions/checkout@v4
-      - name: Set gradlew executable
-        run: chmod +x G-rez-l-int-gration-et-la-livraison-continue-Application-Java/gradlew
-      - name: Run backend tests (Java)
-        run: |
-          cd G-rez-l-int-gration-et-la-livraison-continue-Application-Java
-          ./gradlew clean test --no-daemon --console=plain
-          cd ..
-      - name: Upload backend test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-backend
-          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build/test-results/test/*.xml
+    uses: ./.github/workflows/build-test-backend.yml
+    needs: setup
+    secrets:
+      CI-ACTION-TOKEN: ${{ secrets.CI-ACTION-TOKEN }}
 
   build-test-frontend:
     uses: ./.github/workflows/build-test-frontend.yml
     needs: setup
+    secrets: 
+      CI-ACTION-TOKEN: ${{ secrets.CI-ACTION-TOKEN }}
 
   build-and-push-frontend:
     runs-on: ubuntu-latest # Utilise l'image Ubuntu pour le runner
