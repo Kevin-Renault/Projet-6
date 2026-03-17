@@ -13,14 +13,22 @@ jobs: # Définition des jobs (briques)
       - name: Setup (meta)
         run: echo "Setup job completed. Each job installs its own toolchain."
 
-  build-test-backend: # Job pour build & test le backend (désactivé, fake NOK)
+  build-test-backend: # Job pour build & test le backend (réel)
     runs-on: ubuntu-latest # OS utilisé
     needs: setup # Dépend du job setup (exécuté après)
     steps:
-      - name: Wait backend (test circuit)
+      - name: Checkout code # Récupère le code du repo
+        uses: actions/checkout@v4
+      - name: Run backend tests (Java)
         run: |
-          sleep 5
-          exit 1 # Simule un échec
+          cd G-rez-l-int-gration-et-la-livraison-continue-Application-Java
+          ./gradlew clean test --no-daemon --console=plain
+          cd ..
+      - name: Upload backend test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-backend
+          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build/test-results/test/*.xml
 
   build-test-frontend:
     uses: ./.github/workflows/build-test-frontend.yml
