@@ -83,7 +83,7 @@ jobs: # Définition des jobs (briques)
           TAG=backend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
           docker pull ghcr.io/$REPO:$TAG
           docker run -d --name test-backend -p 8080:8080 ghcr.io/$REPO:$TAG
-          sleep 15
+          sleep 60 # Attente pour que l'app Java démarre
           # Vérifie le endpoint /health ou racine selon l'app Java
           curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
           docker rm -f test-backend
