@@ -21,6 +21,15 @@ jobs: # Définition des jobs (briques)
     steps:
       - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            G-rez-l-int-gration-et-la-livraison-continue-Application-Java/.gradle
+            G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build
+          key: gradle-${{ hashFiles('G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build.gradle') }}-${{ hashFiles('G-rez-l-int-gration-et-la-livraison-continue-Application-Java/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-
       - name: Set gradlew executable
         run: chmod +x G-rez-l-int-gration-et-la-livraison-continue-Application-Java/gradlew
       - name: Run backend tests (Java)
@@ -100,6 +109,13 @@ jobs: # Définition des jobs (briques)
     steps:
       - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/node_modules
+          key: npm-${{ hashFiles('G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/package-lock.json') }}
+          restore-keys: |
+            npm-
       - name: Set up Docker Buildx # Prépare l'outil Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Log in to GitHub Container Registry # Authentification au registre GitHub
