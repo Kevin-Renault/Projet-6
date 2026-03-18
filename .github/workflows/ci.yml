@@ -34,6 +34,14 @@ jobs: # Définition des jobs (briques)
           name: test-results-backend
           path: G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build/test-results/test/*.xml
 
+  report-backend: # Job pour récupérer les rapports backend
+    runs-on: ubuntu-latest
+    needs: build-test-backend
+    if: always()
+    steps:
+      - name: Wait for backend report (placeholder)
+        run: sleep 5
+
   build-test-frontend:
     runs-on: ubuntu-latest    
     needs: setup # Dépend du job setup (exécuté après)
@@ -63,14 +71,6 @@ jobs: # Définition des jobs (briques)
           path: G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/
 
           
-  report-backend: # Job pour récupérer les rapports backend
-    runs-on: ubuntu-latest
-    needs: build-test-backend
-    if: always()
-    steps:
-      - name: Wait for backend report (placeholder)
-        run: sleep 5
-        
   report-frontend: # Job pour récupérer les rapports frontend
     runs-on: ubuntu-latest
     needs: build-test-frontend
@@ -103,21 +103,6 @@ jobs: # Définition des jobs (briques)
           REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           TAG=frontend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
           docker push ghcr.io/$REPO:$TAG
-      # Job de validation de l'image Docker frontend
-      - name: Pull and test Docker image
-        run: |
-          # Récupérer l'image depuis le registry
-          REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
-          TAG=frontend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
-          docker pull ghcr.io/$REPO:$TAG
-          # Démarrer le conteneur (adapter port et endpoint selon le projet)
-          docker run -d --name test-frontend -p 8080:8080 ghcr.io/$REPO:$TAG
-          # Attendre que l'application démarre
-          sleep 10
-          # Vérifier le endpoint /health (adapter selon le projet)
-          curl -f http://localhost:8080/health || exit 1
-          # Nettoyer le conteneur
-          docker rm -f test-frontend
   
   validate-docker-frontend:
     runs-on: ubuntu-latest
