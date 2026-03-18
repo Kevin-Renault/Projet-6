@@ -160,25 +160,27 @@ jobs: # Définition des jobs (briques)
     runs-on: ubuntu-latest
     needs: build-and-push-frontend    
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.ACTIONS_TOKEN }}
-      - name: Pull Docker image
+      - name: Pull frontend image
         run: |
           REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           TAG=frontend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
           docker pull ghcr.io/$REPO:$TAG
-          docker run -d --name test-frontend -p 8080:8080 ghcr.io/$REPO:$TAG
-            # Augmente le temps d'attente pour laisser l'app Java démarrer
-            sleep 60
-            # Teste /health puis /, affiche les logs en cas d'échec
-            (curl -f http://localhost:8080/health || curl -f http://localhost:8080/) || (docker logs test-backend && exit 1)
-          sleep 10
-          curl -f http://localhost:8080/health || exit 1
-          docker rm -f test-frontend
+          docker tag ghcr.io/$REPO:$TAG workshop-front
+      - name: Validate frontend with docker-compose
+        run: |
+          cd G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
+          docker compose -f docker-compose.yml up -d
+          sleep 60
+          curl -f http://localhost || (docker compose logs front && exit 1)
+          docker compose down
           
   reports-merge: # Job commun après les deux récupérations de rapports
     runs-on: ubuntu-latest
