@@ -77,16 +77,19 @@ jobs: # Définition des jobs (briques)
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.ACTIONS_TOKEN }}
-      - name: Pull Docker image
+      - name: Pull backend image
         run: |
           REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           TAG=backend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
           docker pull ghcr.io/$REPO:$TAG
-          docker run -d --name test-backend -p 8080:8080 ghcr.io/$REPO:$TAG
-          sleep 60 # Attente pour que l'app Java démarre
-          # Teste /health puis /, affiche les logs en cas d'échec
-          (curl -f http://localhost:8080/health || curl -f http://localhost:8080/) || (docker logs test-backend && exit 1)
-          docker rm -f test-backend 
+          docker tag ghcr.io/$REPO:$TAG workshop-organizer
+      - name: Validate backend with docker-compose
+        run: |
+          cd G-rez-l-int-gration-et-la-livraison-continue-Application-Java
+          docker compose -f docker-compose.yml up -d
+          sleep 60
+          (curl -f http://localhost:8080/actuator/health || curl -f http://localhost:8080/) || (docker compose logs app && exit 1)
+          docker compose down
 
 
   build-test-frontend:
