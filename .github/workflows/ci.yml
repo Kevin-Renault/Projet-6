@@ -167,6 +167,10 @@ jobs: # Définition des jobs (briques)
           TAG=frontend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
           docker pull ghcr.io/$REPO:$TAG
           docker run -d --name test-frontend -p 8080:8080 ghcr.io/$REPO:$TAG
+            # Augmente le temps d'attente pour laisser l'app Java démarrer
+            sleep 60
+            # Teste /health puis /, affiche les logs en cas d'échec
+            (curl -f http://localhost:8080/health || curl -f http://localhost:8080/) || (docker logs test-backend && exit 1)
           sleep 10
           curl -f http://localhost:8080/health || exit 1
           docker rm -f test-frontend
