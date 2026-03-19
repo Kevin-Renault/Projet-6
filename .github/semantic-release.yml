@@ -1,6 +1,7 @@
 # Configuration de semantic-release pour versioning automatique
 branches:
   - main
+  - dev
 plugins:
   - '@semantic-release/commit-analyzer'
   - '@semantic-release/release-notes-generator'
