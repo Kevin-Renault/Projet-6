@@ -1,3 +1,4 @@
+  
 name: CI Modular # Nom du workflow affiché dans GitHub Actions
 
 on: # Déclencheurs du workflow
@@ -182,14 +183,26 @@ jobs: # Définition des jobs (briques)
           curl -f http://localhost || (docker compose logs front && exit 1)
           docker compose down
          
-
-  cleanup: # Job de nettoyage final
+  merge-report:
     runs-on: ubuntu-latest
     needs: [validate-docker-backend, validate-docker-frontend]
+    steps:
+      - name: Merge and summarize test reports
+        run: |
+          echo "::group::JUnit Test Summary"
+          for file in test-results/*.xml; do
+            echo "Report: $file"
+            grep -E '<testcase|<failure|<error|<skipped' "$file" | head -n 20
+          done
+          echo "::endgroup::"
+          
+  cleanup: # Job de nettoyage final
+    runs-on: ubuntu-latest
+    needs: merge-report
     if: always()
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Cleanup (placeholder)
-        run: echo "Cleanup runs after all validations are completed."
+        run: echo "Cleanup runs after all validations and report merge."
 
