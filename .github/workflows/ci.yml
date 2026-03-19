@@ -154,7 +154,9 @@ jobs: # Définition des jobs (briques)
         run: |
           echo "# Résumé des tests JUnit" >> "$GITHUB_STEP_SUMMARY"
           if [ -f test-results/Report-summary.xml ]; then
+            echo '\`\`\`' >> "$GITHUB_STEP_SUMMARY"
             awk '/<!\[CDATA\[/, /\]\]>/ {if ($0 !~ /<!\[CDATA\[|\]\]>/) print}' test-results/Report-summary.xml >> "$GITHUB_STEP_SUMMARY"
+            echo '\`\`\`' >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Aucun rapport global trouvé (Report-summary.xml)." >> "$GITHUB_STEP_SUMMARY"
           fi
