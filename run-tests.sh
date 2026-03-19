@@ -80,3 +80,4 @@ if [ -f "$ANGULAR_XML" ] && [ -f "$COVERAGE_HTML" ]; then
 fi
 echo "Tests terminés. Les rapports JUnit sont disponibles dans :"
 echo "- Tous les rapports : test-results/"
+ls -l test-results/
