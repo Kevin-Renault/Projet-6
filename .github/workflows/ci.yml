@@ -150,11 +150,11 @@ jobs: # Définition des jobs (briques)
           path: test-results
       - name: Show test-results content
         run: ls -l test-results/
-      - name: Afficher le rapport global
+      - name: Afficher le résumé lisible
         run: |
-          echo "# Résumé des tests JUnit"
+          echo "# Résumé des tests JUnit" >> "$GITHUB_STEP_SUMMARY"
           if [ -f test-results/Report-summary.xml ]; then
-            cat test-results/Report-summary.xml >> "$GITHUB_STEP_SUMMARY"
+            awk '/<!\[CDATA\[/, /\]\]>/ {if ($0 !~ /<!\[CDATA\[|\]\]>/) print}' test-results/Report-summary.xml >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Aucun rapport global trouvé (Report-summary.xml)." >> "$GITHUB_STEP_SUMMARY"
           fi
