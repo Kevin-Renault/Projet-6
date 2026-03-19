@@ -14,6 +14,7 @@ set -e
 cd G-rez-l-int-gration-et-la-livraison-continue-Application-Java
 
 echo "[Backend] Lancement des tests Java..."
+chmod +x ./gradlew
 ./gradlew clean test --no-daemon --console=plain || echo "[Backend] Les tests Java ont échoué, on continue."
 # Les rapports JUnit sont générés dans build/test-results/test
 cd ..
