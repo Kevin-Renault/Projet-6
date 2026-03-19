@@ -141,7 +141,13 @@ jobs: # Définition des jobs (briques)
   merge-report:
     runs-on: ubuntu-latest
     needs: [validate-docker-backend, validate-docker-frontend]
+    if: always()
     steps:
+      - name: Download test results artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results-all
+          path: test-results
       - name: Merge and summarize test reports
         run: |
           echo "::group::JUnit Test Summary"
