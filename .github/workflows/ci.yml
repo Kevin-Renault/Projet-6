@@ -17,27 +17,25 @@ jobs: # Définition des jobs (briques)
       - name: Setup (meta)
         run: echo "Setup job completed. Each job installs its own toolchain."
 
-      
-
-  build-test-backend: # Job pour build & test le backend (réel)
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Ensure run-tests.sh is executable
-        run: chmod +x ./run-tests.sh
-      - name: Run all tests (backend & frontend)
-        run: ./run-tests.sh
-      - name: Upload all JUnit test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-all
-          path: test-results/*.xml
+  test-application:
+      runs-on: ubuntu-latest
+      needs: setup
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+        - name: Ensure run-tests.sh is executable
+          run: chmod +x ./run-tests.sh
+        - name: Run all tests (backend & frontend)
+          run: ./run-tests.sh
+        - name: Upload all JUnit test results
+          uses: actions/upload-artifact@v4
+          with:
+            name: test-results-all
+            path: test-results/*.xml
 
   build-and-push-backend:
     runs-on: ubuntu-latest
-    needs: build-test-backend
+    needs: test-application
     steps:
       - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
@@ -87,45 +85,11 @@ jobs: # Définition des jobs (briques)
           docker compose down
 
 
-  build-test-frontend:
-    runs-on: ubuntu-latest    
-    needs: setup # Dépend du job setup (exécuté après)
-    steps:
-      - name: Checkout code # Récupère le code du repo
-        uses: actions/checkout@v4
-      - name: Cache npm dependencies
-        uses: actions/cache@v4
-        with:
-          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/node_modules
-          key: npm-${{ hashFiles('G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/package-lock.json') }}
-          restore-keys: |
-            npm-
-      - name: Set up Docker Buildx # Prépare l'outil Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Log in to GitHub Container Registry # Authentification au registre GitHub
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.ACTIONS_TOKEN }}
-      - name: Build and run frontend tests (docker-compose) # Build et test frontend via docker-compose
-        run: |
-          docker compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml up --build --abort-on-container-exit --exit-code-from tests || docker-compose -f G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/docker-compose.yml logs
-      - name: Upload frontend test results # Sauvegarde les résultats de test frontend
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-frontend
-          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/reports/*.xml
-      - name: Upload coverage report (Angular) # Sauvegarde le rapport de couverture Angular
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report-angular
-          path: G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/
 
 
   build-and-push-frontend:
     runs-on: ubuntu-latest # Utilise l'image Ubuntu pour le runner
-    needs: build-test-frontend # Ce job dépend du job de test frontend
+    needs: test-application # Ce job dépend du job de test-application
     steps:
       - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
