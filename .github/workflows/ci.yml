@@ -148,6 +148,8 @@ jobs: # Définition des jobs (briques)
         with:
           name: test-results-all
           path: test-results
+      - name: Show test-results content
+        run: ls -l test-results/
       - name: Merge and summarize test reports
         run: |
           echo "::group::JUnit Test Summary"
