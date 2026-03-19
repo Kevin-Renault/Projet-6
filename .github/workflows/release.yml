@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - feature/semantic-release
   pull_request:
     branches:
       - main
