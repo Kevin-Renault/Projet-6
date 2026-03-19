@@ -150,21 +150,14 @@ jobs: # Définition des jobs (briques)
           path: test-results
       - name: Show test-results content
         run: ls -l test-results/
-      - name: Merge and summarize test reports
+      - name: Afficher le rapport global
         run: |
-          count=$(ls test-results/*.xml 2>/dev/null | wc -l)
-          {
-            echo "# Résumé des tests JUnit"
-            if [ "$count" -gt 0 ]; then
-              for file in test-results/*.xml; do
-                echo "## Rapport : $file"
-                grep -E '<testcase|<failure|<error|<skipped' "$file" | head -n 20
-              done
-              echo "\n**Total des rapports trouvés : $count**"
-            else
-              echo "Aucun rapport JUnit XML trouvé dans test-results/."
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
+          echo "# Résumé des tests JUnit"
+          if [ -f test-results/Report-summary.xml ]; then
+            cat test-results/Report-summary.xml >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Aucun rapport global trouvé (Report-summary.xml)." >> "$GITHUB_STEP_SUMMARY"
+          fi
           
   cleanup: # Job de nettoyage final
     runs-on: ubuntu-latest
