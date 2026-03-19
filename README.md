@@ -33,10 +33,86 @@ docker compose up -d
 
 ## Pour aller plus loin
 
-- Pour la configuration, les tests, la CI/CD, consultez les README spécifiques dans chaque dossier :
   - [README Angular](G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/README.md)
   - [README Java](G-rez-l-int-gration-et-la-livraison-continue-Application-Java/README.md)
 
+## Mise en place de la CI/CD Docker avec GitHub Actions
+
+Pour permettre à GitHub Actions de builder et pousser des images Docker vers GitHub Container Registry (ghcr.io), il faut :
+
+1. **Créer un Personal Access Token (PAT) classic sur GitHub**
+   - Les tokens fine-grained ne fonctionnent pas toujours pour le push Docker.
+   - Le PAT doit avoir les droits :
+     - `write:packages` (obligatoire pour le push)
+     - `repo` (pour les actions sur le code)
+     - `workflow` (pour exécuter les workflows)
+2. **Ajouter ce PAT comme secret dans le dépôt GitHub**
+   - Menu : Settings > Secrets and variables > Actions
+   - Le nom du secret doit correspondre à celui utilisé dans le workflow (ex : `CI-ACTION-TOKEN` ou `ACTIONS_TOKEN`).
+3. **Configurer le workflow pour utiliser ce secret**
+   - Exemple pour le login Docker :
+     ```yaml
+     - name: Log in to GitHub Container Registry
+       uses: docker/login-action@v3
+       with:
+         registry: ghcr.io
+         username: ${{ github.actor }}
+         password: ${{ secrets.CI-ACTION-TOKEN }}
+     ```
+
+Si le PAT n’a pas les bons droits, ou si le secret est absent/mal orthographié, le push Docker échouera.
+
+**Résumé :**
+- Utiliser un PAT classic avec les droits `write:packages`, `repo`, `workflow`.
+- Ajouter ce PAT comme secret dans le repo.
+- Vérifier la déclaration correcte dans le workflow.
 ---
 
+
 Pour toute question ou détail technique, référez-vous aux documentations internes de chaque projet.
+
+# FAQ – Problèmes courants
+# Erreurs Docker CI/CD avec GitHub Actions
+
+## Erreurs fréquentes lors du push Docker
+
+- **Error: Password required**
+   - Le secret PAT n'est pas transmis ou mal orthographié dans le workflow.
+- **Token absent**
+   - Le secret PAT n'existe pas ou n'est pas accessible dans le repo.
+- **permission_denied: The token provided does not match expected scopes**
+   - Le PAT n'a pas les droits `write:packages` ou n'est pas un PAT classic.
+
+Vérifiez la section explicative ci-dessus pour la solution détaillée.
+
+## Erreur Gradle : Could not find or load main class worker.org.gradle.process.internal.worker.GradleWorkerMain
+
+Si vous rencontrez cette erreur lors de l'exécution des tests ou du build Java, il est probable qu'elle soit liée à l'emplacement du cache Gradle, en particulier si votre dossier utilisateur Windows contient des accents ou des caractères spéciaux. Cela peut provoquer des dysfonctionnements avec Gradle.
+
+**Correctif recommandé :**
+
+Définissez explicitement la variable d'environnement `GRADLE_USER_HOME` vers un dossier sans accents ni caractères spéciaux (par exemple `C:\gradle-cache`).
+
+Exemple sous Windows :
+
+```powershell
+$env:GRADLE_USER_HOME="C:\\gradle-cache"
+```
+Ou dans un fichier `.env` ou dans la configuration de votre terminal/shell.
+
+Ensuite, supprimez les anciens dossiers `.gradle` :
+1. Supprimez le dossier `.gradle` à la racine du projet.
+2. Supprimez le dossier `.gradle` dans `C:\Users\VOTRE_UTILISATEUR\.gradle` (remplacez VOTRE_UTILISATEUR par votre nom d'utilisateur Windows).
+3. **Ne supprimez pas** le fichier `gradle/wrapper/gradle-wrapper.jar` ! Si ce fichier est absent ou corrompu :
+   - Restaurez-le à partir d'un autre projet fonctionnel (même version Gradle),
+   - ou téléchargez-le depuis le dépôt officiel Gradle ([voir documentation officielle](https://docs.gradle.org/current/userguide/gradle_wrapper.html)).
+4. Une fois le jar présent, regénérez le wrapper avec :
+   ```bash
+   ./gradlew wrapper --gradle-version 8.7
+   ```
+5. Relancez la commande :
+   ```bash
+   ./gradlew clean build --refresh-dependencies
+   ```
+
+Cela va forcer Gradle à retélécharger toutes les dépendances et corriger la plupart des problèmes de cache ou de wrapper corrompu. Si le problème persiste, vérifiez que la variable d'environnement est bien prise en compte.
