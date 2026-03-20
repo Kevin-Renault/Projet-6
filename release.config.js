@@ -1,3 +1,8 @@
+const {
+    angularPackageJsonAsset,
+    javaBuildGradleAsset
+} = require('./paths.config');
+
 module.exports = {
     // Target the branches that should trigger automated releases
     branches: ['main', 'dev'],
@@ -12,8 +17,8 @@ module.exports = {
         '@semantic-release/github',
         ['@semantic-release/git', {
             assets: [
-                'G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/package.json',
-                'G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build.gradle'
+                angularPackageJsonAsset,
+                javaBuildGradleAsset
             ],
             message: 'chore(release): ${nextRelease.version} [skip ci]'
         }]

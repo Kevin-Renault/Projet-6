@@ -18,7 +18,7 @@ services:
     container_name: workshop-back
     image: workshop-organizer
     build:
-      context: ./G-rez-l-int-gration-et-la-livraison-continue-Application-Java
+      context: ./${JAVA_DIR}
     ports:
       - "8080:8080"
     environment:
@@ -38,7 +38,7 @@ services:
     container_name: workshop-front
     image: workshop-front
     build:
-      context: ./G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
+      context: ./${ANGULAR_DIR}
     ports:
       - "80:80"
     depends_on:
