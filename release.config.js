@@ -5,13 +5,17 @@ module.exports = {
         '@semantic-release/commit-analyzer',
         '@semantic-release/release-notes-generator',
         '@semantic-release/changelog',
-        '@semantic-release/github',
-        '@semantic-release/git',
-        // Export the computed version to the GitHub Actions environment
+        // Synchronize the npm/Gradle versions before the git plugin runs
         ['@semantic-release/exec', {
-            // When GitHub Actions exposes GITHUB_ENV we append the semantic version
-            // so subsequent steps automatically see RELEASE_VERSION.
-            prepareCmd: 'if [ -n "$GITHUB_ENV" ]; then echo "RELEASE_VERSION=${nextRelease.version}" >> "$GITHUB_ENV"; fi'
+            prepareCmd: 'node scripts/sync-version.js ${nextRelease.version}'
+        }],
+        '@semantic-release/github',
+        ['@semantic-release/git', {
+            assets: [
+                'package.json',
+                'G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build.gradle'
+            ],
+            message: 'chore(release): ${nextRelease.version} [skip ci]'
         }]
     ],
     changelogFile: 'CHANGELOG.md',

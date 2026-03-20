@@ -176,6 +176,7 @@ Pour que semantic-release puisse push/tagger les commits, assure-toi que la prot
 - `SEMANTIC_RELEASE` met à jour `CHANGELOG.md`, crée un tag `vX.Y.Z` et publie une release GitHub (visible sur la page Releases et via `git tag`).
 - La release sur `dev` peut ensuite être mergée sur `main` (sans changer la version si aucun commit nouveau), ce qui maintient le changelog/tag en cohérence.
 - Le job `release` reconstruit puis retague les images Docker (`backend-vX.Y.Z` et `frontend-vX.Y.Z`) avec la version sémantique avant de les pousser vers GitHub Container Registry, garantissant que chaque release trouve ses artefacts versionnés.
+- Avant chaque commit de release, le script `scripts/sync-version.js` met à jour `package.json` et `G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build.gradle` pour synchroniser la version calculée par semantic-release, puis `@semantic-release/git` ajoute ces fichiers à la release. Ce script est écrit en JavaScript pour pouvoir être exécuté directement par `node` sans compilation TypeScript supplémentaire dans le pipeline.
 
 ## Rapport JUnit XML et affichage dans le CI/CD
 
