@@ -12,7 +12,7 @@ module.exports = {
         '@semantic-release/github',
         ['@semantic-release/git', {
             assets: [
-                'package.json',
+                'G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/package.json',
                 'G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build.gradle'
             ],
             message: 'chore(release): ${nextRelease.version} [skip ci]'
