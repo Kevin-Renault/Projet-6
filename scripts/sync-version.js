@@ -1,5 +1,8 @@
 const fs = require('fs');
-const path = require('path');
+const {
+    angularPackageJsonPath,
+    javaBuildGradlePath
+} = require('../paths.config');
 
 const version = process.argv[2];
 if (!version) {
@@ -7,10 +10,8 @@ if (!version) {
     process.exit(1);
 }
 
-const root = path.resolve(__dirname, '..');
-
 function updatePackageJson() {
-    const pkgPath = path.join(root, 'G-rez-l-int-gration-et-la-livraison-continue-Application-Angular', 'package.json');
+    const pkgPath = angularPackageJsonPath;
     const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
     pkg.version = version;
     fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
@@ -18,7 +19,7 @@ function updatePackageJson() {
 }
 
 function updateBuildGradle() {
-    const gradlePath = path.join(root, 'G-rez-l-int-gration-et-la-livraison-continue-Application-Java', 'build.gradle');
+    const gradlePath = javaBuildGradlePath;
     let content = fs.readFileSync(gradlePath, 'utf-8');
     const versionLine = /version\s*=\s*['"][^'"]+['"]/;
     if (!versionLine.test(content)) {

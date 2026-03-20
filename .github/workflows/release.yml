@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Load shared path config
+        run: ./scripts/load-path-env.sh
       - name: Use Node.js 24
         uses: actions/setup-node@v4
         with:
@@ -42,13 +44,13 @@ jobs:
         run: |
           REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           TAG=backend-v${RELEASE_VERSION}
-          docker build -t ghcr.io/$REPO:$TAG G-rez-l-int-gration-et-la-livraison-continue-Application-Java
+          docker build -t ghcr.io/$REPO:$TAG "$JAVA_DIR"
           docker push ghcr.io/$REPO:$TAG
       - name: Build and push frontend release image
         if: env.RELEASE_VERSION != ''
         run: |
           REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           TAG=frontend-v${RELEASE_VERSION}
-          docker build -t ghcr.io/$REPO:$TAG G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
+          docker build -t ghcr.io/$REPO:$TAG "$ANGULAR_DIR"
           docker push ghcr.io/$REPO:$TAG
 

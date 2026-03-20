@@ -1,17 +1,30 @@
 
 #!/bin/bash
+# Lecture du fichier .env pour partager les chemins
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+ENV_FILE="$SCRIPT_DIR/.env"
+if [ -f "$ENV_FILE" ]; then
+	set -o allexport
+	source "$ENV_FILE"
+	set +o allexport
+fi
+
+DEFAULT_ANGULAR_DIR=G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
+DEFAULT_JAVA_DIR=G-rez-l-int-gration-et-la-livraison-continue-Application-Java
+ANGULAR_DIR=${ANGULAR_DIR:-$DEFAULT_ANGULAR_DIR}
+JAVA_DIR=${JAVA_DIR:-$DEFAULT_JAVA_DIR}
 
 # Nettoyage des anciens rapports
 rm -rf test-results/
-rm -rf G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/
-rm -rf G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/reports/
+rm -rf "$ANGULAR_DIR/coverage/"
+rm -rf "$ANGULAR_DIR/reports/"
 # Script pour lancer les tests backend (Java) et frontend (Angular)
 # et générer des rapports JUnit XML pour GitHub Actions
 
 set -e
 
 # Backend Java
-cd G-rez-l-int-gration-et-la-livraison-continue-Application-Java
+cd "$JAVA_DIR"
 
 echo "[Backend] Lancement des tests Java..."
 chmod +x ./gradlew
@@ -20,7 +33,7 @@ chmod +x ./gradlew
 cd ..
 
 # Frontend Angular
-cd G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
+cd "$ANGULAR_DIR"
 
 echo "[Frontend] Lancement des tests Angular..."
 npm install
@@ -32,32 +45,33 @@ cd ..
 mkdir -p test-results
 
 # Copie des rapports Java
-if [ -d "G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build/test-results/test" ]; then
-	cp G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build/test-results/test/*.xml test-results/ 2>/dev/null || true
+if [ -d "$JAVA_DIR/build/test-results/test" ]; then
+    cp "$JAVA_DIR/build/test-results/test"/*.xml test-results/ 2>/dev/null || true
 fi
 
 # Copie des rapports Angular (test-results/junit ou reports)
-if [ -d "G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/test-results/junit" ]; then
-	cp G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/test-results/junit/*.xml test-results/ 2>/dev/null || true
+if [ -d "$ANGULAR_DIR/test-results/junit" ]; then
+    cp "$ANGULAR_DIR/test-results/junit"/*.xml test-results/ 2>/dev/null || true
 fi
-if [ -d "G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/reports" ]; then
-	cp G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/reports/*.xml test-results/ 2>/dev/null || true
+if [ -d "$ANGULAR_DIR/reports" ]; then
+    cp "$ANGULAR_DIR/reports"/*.xml test-results/ 2>/dev/null || true
 fi
 
 
 echo "\nRésumé de la couverture de code (Angular) :"
-if [ -f "G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/olympic-games-starter/index.html" ]; then
-	grep -A2 'Statements' G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/olympic-games-starter/index.html | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Statements   : "$2" ( "$3" )"}'
-	grep -A2 'Branches' G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/olympic-games-starter/index.html | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Branches     : "$2" ( "$3" )"}'
-	grep -A2 'Functions' G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/olympic-games-starter/index.html | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Functions    : "$2" ( "$3" )"}'
-	grep -A2 'Lines' G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/olympic-games-starter/index.html | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Lines        : "$2" ( "$3" )"}'
+COVERAGE_HTML="$ANGULAR_DIR/coverage/olympic-games-starter/index.html"
+if [ -f "$COVERAGE_HTML" ]; then
+	grep -A2 'Statements' "$COVERAGE_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Statements   : "$2" ( "$3" )"}'
+	grep -A2 'Branches' "$COVERAGE_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Branches     : "$2" ( "$3" )"}'
+	grep -A2 'Functions' "$COVERAGE_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Functions    : "$2" ( "$3" )"}'
+	grep -A2 'Lines' "$COVERAGE_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Lines        : "$2" ( "$3" )"}'
 else
-	echo "Pas de rapport de couverture trouvé."
+    echo "Pas de rapport de couverture trouvé."
 fi
 
 # Résumé de la couverture backend Java (Jacoco)
 echo "\nRésumé de la couverture de code (Backend Java) :"
-JACOCO_HTML="G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build/reports/jacoco/test/html/index.html"
+JACOCO_HTML="$JAVA_DIR/build/reports/jacoco/test/html/index.html"
 if [ -f "$JACOCO_HTML" ]; then
 	grep -A2 'Covered Instructions' "$JACOCO_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Instructions : "$2" ( "$3" )"}'
 	grep -A2 'Covered Branches' "$JACOCO_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Branches     : "$2" ( "$3" )"}'
@@ -82,7 +96,7 @@ else
 	echo "Pas de rapport de couverture Jacoco trouvé."
 fi
 ANGULAR_XML=$(ls test-results/TESTS-Chrome_Headless_*.xml 2>/dev/null | head -n1)
-COVERAGE_HTML="G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/coverage/olympic-games-starter/index.html"
+COVERAGE_HTML="$ANGULAR_DIR/coverage/olympic-games-starter/index.html"
 if [ -f "$ANGULAR_XML" ] && [ -f "$COVERAGE_HTML" ]; then
 	get_coverage_line() {
 		local label="$1"
