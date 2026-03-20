@@ -10,7 +10,7 @@ if (!version) {
 const root = path.resolve(__dirname, '..');
 
 function updatePackageJson() {
-    const pkgPath = path.join(root, 'package.json');
+    const pkgPath = path.join(root, 'G-rez-l-int-gration-et-la-livraison-continue-Application-Angular', 'package.json');
     const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
     pkg.version = version;
     fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
