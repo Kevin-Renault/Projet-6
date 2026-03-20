@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: 24
       - name: Install dependencies
-        run: npm install --global semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/commit-analyzer @semantic-release/release-notes-generator
+        run: npm install --global semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/commit-analyzer @semantic-release/exec @semantic-release/release-notes-generator
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -37,4 +37,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}          
         run: npx semantic-release
+      - name: Build and push backend release image
+        if: env.RELEASE_VERSION != ''
+        run: |
+          REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
+          TAG=backend-v${RELEASE_VERSION}
+          docker build -t ghcr.io/$REPO:$TAG G-rez-l-int-gration-et-la-livraison-continue-Application-Java
+          docker push ghcr.io/$REPO:$TAG
+      - name: Build and push frontend release image
+        if: env.RELEASE_VERSION != ''
+        run: |
+          REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
+          TAG=frontend-v${RELEASE_VERSION}
+          docker build -t ghcr.io/$REPO:$TAG G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
+          docker push ghcr.io/$REPO:$TAG
 
