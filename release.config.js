@@ -19,6 +19,7 @@ module.exports = {
             assets: [
                 angularPackageJsonAsset,
                 javaBuildGradleAsset
+                , 'CHANGELOG.md'
             ],
             message: 'chore(release): ${nextRelease.version} [skip ci]'
         }]
