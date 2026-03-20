@@ -29,5 +29,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.ACTIONS_TOKEN }}
       - name: Run semantic-release          
-          
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}          
         run: npx semantic-release
