@@ -39,6 +39,8 @@ jobs: # Définition des jobs (briques)
     steps:
       - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
+      - name: Load shared path config
+        run: ./scripts/load-path-env.sh
       - name: Set up Docker Buildx # Prépare l'outil Docker Buildx pour le build multi-plateforme
         uses: docker/setup-buildx-action@v3
       - name: Log in to GitHub Container Registry # Authentifie Docker auprès du registre GitHub
@@ -51,7 +53,7 @@ jobs: # Définition des jobs (briques)
         run: |
           REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           TAG=backend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
-          docker build -t ghcr.io/$REPO:$TAG G-rez-l-int-gration-et-la-livraison-continue-Application-Java
+          docker build -t ghcr.io/$REPO:$TAG "$JAVA_DIR"
       - name: Push Docker image # Pousse l'image Docker backend
         run: |
           REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
@@ -64,6 +66,8 @@ jobs: # Définition des jobs (briques)
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Load shared path config
+        run: ./scripts/load-path-env.sh
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -78,7 +82,7 @@ jobs: # Définition des jobs (briques)
           docker tag ghcr.io/$REPO:$TAG workshop-organizer
       - name: Validate backend with docker-compose
         run: |
-          cd G-rez-l-int-gration-et-la-livraison-continue-Application-Java
+          cd "$JAVA_DIR"
           docker compose -f docker-compose.yml up -d
           sleep 60
           (curl -f http://localhost:8080/actuator/health || curl -f http://localhost:8080/) || (docker compose logs app && exit 1)
@@ -93,6 +97,8 @@ jobs: # Définition des jobs (briques)
     steps:
       - name: Checkout code # Récupère le code du repo
         uses: actions/checkout@v4
+      - name: Load shared path config
+        run: ./scripts/load-path-env.sh
       - name: Set up Docker Buildx # Prépare l'outil Docker Buildx pour le build multi-plateforme
         uses: docker/setup-buildx-action@v3
       - name: Log in to GitHub Container Registry # Authentifie Docker auprès du registre GitHub
@@ -105,7 +111,7 @@ jobs: # Définition des jobs (briques)
         run: |
           REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           TAG=frontend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
-          docker build -t ghcr.io/$REPO:$TAG G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
+          docker build -t ghcr.io/$REPO:$TAG "$ANGULAR_DIR"
       - name: Push Docker image # Pousse l'image Docker vers le registre GitHub
         run: |
           REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
@@ -118,6 +124,8 @@ jobs: # Définition des jobs (briques)
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Load shared path config
+        run: ./scripts/load-path-env.sh
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -132,7 +140,7 @@ jobs: # Définition des jobs (briques)
           docker tag ghcr.io/$REPO:$TAG workshop-front
       - name: Validate frontend with docker-compose
         run: |
-          cd G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
+          cd "$ANGULAR_DIR"
           docker compose -f docker-compose.yml up -d
           sleep 60
           curl -f http://localhost || (docker compose logs front && exit 1)
