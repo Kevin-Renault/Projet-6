@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/Kevin-Renault/Projet-6/compare/v1.0.0...v1.0.1) (2026-03-20)
+
+
+### Bug Fixes
+
+* align Node versions and doc ([38d0993](https://github.com/Kevin-Renault/Projet-6/commit/38d0993908ac54f4aa8595be4f872270a1b48bcf))
+
 # 1.0.0 (2026-03-20)
 
 
