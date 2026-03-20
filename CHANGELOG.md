@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/Kevin-Renault/Projet-6/compare/v1.1.2...v1.1.3) (2026-03-20)
+
+
+### Bug Fixes
+
+* 'CHANGELOG.md' ([2cc6b6e](https://github.com/Kevin-Renault/Projet-6/commit/2cc6b6e854c6b36c65d9d448051352ddabbeb515))
+
 ## [1.0.1](https://github.com/Kevin-Renault/Projet-6/compare/v1.0.0...v1.0.1) (2026-03-20)
 
 
