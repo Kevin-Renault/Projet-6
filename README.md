@@ -38,6 +38,34 @@ docker compose up -d
 
 ## Mise en place de la CI/CD Docker avec GitHub Actions
 
+## Validation des images Docker dans la CI/CD
+
+Après le push d'une image Docker sur GitHub Container Registry, il est recommandé d'ajouter un job de validation dans le workflow CI/CD.
+
+Ce job doit :
+- Récupérer l'image (pull)
+- Démarrer un conteneur (run)
+- Vérifier que l'application fonctionne (ex : test d'un endpoint, vérification d'un log)
+- Arrêter et supprimer le conteneur
+
+Exemple de job GitHub Actions pour une application exposant un endpoint /health sur le port 8080 :
+
+```yaml
+# Job de validation après le push Docker
+- name: Pull and test Docker image
+   run: |
+      docker pull ghcr.io/${{ github.repository }}:${{ github.sha }}
+      docker run -d --name test-app -p 8080:8080 ghcr.io/${{ github.repository }}:${{ github.sha }}
+      # Attendre que l'application démarre
+      sleep 10
+      # Vérifier le endpoint /health (adapter selon le projet)
+      curl -f http://localhost:8080/health || exit 1
+      # Nettoyer le conteneur
+      docker rm -f test-app
+```
+
+> Adaptez le port, le nom du conteneur et le endpoint selon votre application (Angular ou Java).
+
 Pour permettre à GitHub Actions de builder et pousser des images Docker vers GitHub Container Registry (ghcr.io), il faut :
 
 1. **Créer un Personal Access Token (PAT) classic sur GitHub**
@@ -116,3 +144,35 @@ Ensuite, supprimez les anciens dossiers `.gradle` :
    ```
 
 Cela va forcer Gradle à retélécharger toutes les dépendances et corriger la plupart des problèmes de cache ou de wrapper corrompu. Si le problème persiste, vérifiez que la variable d'environnement est bien prise en compte.
+
+## Node.js 24 et dépréciation des actions
+
+Depuis avril 2024, GitHub Actions déprécie les versions Node.js 20 pour les actions JavaScript. Le projet utilise Node.js 24 pour garantir la compatibilité future :
+- Le Dockerfile frontend utilise `FROM node:24`.
+- La variable d'environnement `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` est définie dans le workflow CI.
+- Les actions GitHub sont mises à jour pour supporter Node.js 24.
+
+## Versioning automatique avec semantic-release
+
+Le projet prévoit l'intégration de [semantic-release](https://github.com/semantic-release/semantic-release) pour la gestion automatique des versions et des changelogs :
+- Les versions sont générées à partir des messages de commit.
+- Le changelog est mis à jour automatiquement.
+- Les tags et releases sont publiés sur GitHub.
+Voir la documentation officielle pour la configuration : https://github.com/semantic-release/semantic-release
+
+## Rapport JUnit XML et affichage dans le CI/CD
+
+Les tests frontend et backend génèrent des rapports au format JUnit XML :
+- Les rapports sont placés dans le dossier `test-results/` à la racine du projet.
+- Une étape `merge-report` dans le workflow CI lit tous les fichiers XML et affiche un résumé dans le job summary GitHub Actions.
+- Cela permet de visualiser rapidement le résultat des tests directement dans l'interface CI/CD.
+
+Exemple :
+```
+test-results/
+   TEST-fr.oc.devops.backend.services.NotionServiceTest.xml
+   TEST-fr.oc.devops.backend.services.WorkshopServiceTest.xml
+   TESTS-Chrome_Headless_145.0.0.0_(Windows_10).xml
+```
+
+Pour plus d'informations sur le format JUnit XML : https://github.com/test-results/junitxml

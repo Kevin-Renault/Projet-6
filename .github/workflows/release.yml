@@ -13,6 +13,7 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    # Ensures the workflow token can push commits/tags and write package metadata.
     permissions:
       contents: write 
       packages: write 
@@ -31,6 +32,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.ACTIONS_TOKEN }}
+      # Run semantic-release with the PAT that has repo scope so it can push tags back to dev/main.
       - name: Run semantic-release          
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}          
