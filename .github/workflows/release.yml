@@ -26,3 +26,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
         run: npx semantic-release
+        
