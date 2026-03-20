@@ -17,3 +17,4 @@ fi
 
 echo "ANGULAR_DIR=$ANGULAR_DIR" >> "$GITHUB_ENV"
 echo "JAVA_DIR=$JAVA_DIR" >> "$GITHUB_ENV"
+
