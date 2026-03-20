@@ -38,6 +38,18 @@ docker compose up -d
 
 ## Mise en place de la CI/CD Docker avec GitHub Actions
 
+Ce dépot utilise un pipeline GitHub Actions réutilisable (`.github/workflows/ci.yml`) pour :
+- lancer tous les tests via `run-tests.sh` (Angular + Spring Boot),
+- construire et pousser les images Docker vers GitHub Container Registry (back et front),
+- valider les images via `docker compose up` + vérification d’un endpoint,
+- fusionner tous les rapports JUnit (`test-results/*.xml`) dans `Report-summary.xml` puis afficher un résumé directement dans la page GitHub Actions à l’aide du job `merge-report`.
+
+L’étape `merge-report` souhaite expliciter le résultat des tests : elle télécharge l’artéfact `test-results-all`, liste son contenu et extrait la partie texte de `Report-summary.xml` pour l’insérer dans `GITHUB_STEP_SUMMARY`.
+
+### Scripts et rapports
+
+`run-tests.sh` (à la racine) détecte dynamiquement les projets Angular ou Spring Boot, exécute leurs suites de tests, exporte les rapports JUnit dans `test-results/` et produit un résumé `Report-summary.xml`. Ce fichier est réinitialisé avant chaque lancement et les artefacts sont téléchargés par `merge-report` lors de la phase finale.
+
 ## Validation des images Docker dans la CI/CD
 
 Après le push d'une image Docker sur GitHub Container Registry, il est recommandé d'ajouter un job de validation dans le workflow CI/CD.
@@ -154,11 +166,16 @@ Depuis avril 2024, GitHub Actions déprécie les versions Node.js 20 pour les ac
 
 ## Versioning automatique avec semantic-release
 
-Le projet prévoit l'intégration de [semantic-release](https://github.com/semantic-release/semantic-release) pour la gestion automatique des versions et des changelogs :
-- Les versions sont générées à partir des messages de commit.
-- Le changelog est mis à jour automatiquement.
-- Les tags et releases sont publiés sur GitHub.
-Voir la documentation officielle pour la configuration : https://github.com/semantic-release/semantic-release
+Le projet utilise [semantic-release](https://github.com/semantic-release/semantic-release) pour publier automatiquement les versions et alimenter `CHANGELOG.md`. Le workflow `.github/workflows/release.yml` s’exécute sur les branches `dev` et `main`, installe les plugins (`changelog`, `git`, `github`) avec Node 24, puis exécute `npx semantic-release` avec `GITHUB_TOKEN` pointant vers le secret `ACTIONS_TOKEN` (PAT classic avec scopes `repo`, `packages:write`, `workflow`).
+
+Pour que semantic-release puisse push/tagger les commits, assure-toi que la protection des branches `dev`/`main` permet au bot (`github-actions[bot]`) ou au compte associé au PAT de contourner les restrictions `Restrict updates/creations/deletions`. Le workflow écrit également des commentaires/labels (`released on @dev`) sur les PRs concernées.
+
+### Convention et propagation
+
+- Utilise [Conventional Commits](https://www.conventionalcommits.org) pour déclencher un `patch`/`minor`/`major`.
+- `SEMANTIC_RELEASE` met à jour `CHANGELOG.md`, crée un tag `vX.Y.Z` et publie une release GitHub (visible sur la page Releases et via `git tag`).
+- La release sur `dev` peut ensuite être mergée sur `main` (sans changer la version si aucun commit nouveau), ce qui maintient le changelog/tag en cohérence.
+- Pour suivre la version dans les artefacts Docker, tu peux taguer les images avec `vX.Y.Z` lors des build/push (à ajouter via les jobs `build-and-push-*` si tu veux prolonger la chaine de publication).
 
 ## Rapport JUnit XML et affichage dans le CI/CD
 
