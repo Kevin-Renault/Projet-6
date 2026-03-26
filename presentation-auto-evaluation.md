@@ -286,6 +286,8 @@
   > ```sh
   > cat CHANGELOG.md
   > ```
+  Seuls les commits commençant par `feat:`, `fix:` ou contenant `BREAKING CHANGE:` sont inclus par défaut dans le changelog généré automatiquement. Les autres types (`refactor:`, `chore:`, etc.) sont exclus sauf configuration spécifique.
+
 - **Tag Docker avec version sémantique**
   > Les images Docker sont taguées avec la version, facilitant le déploiement.
   >
