@@ -194,3 +194,9 @@ test-results/
 ```
 
 Pour plus d'informations sur le format JUnit XML : https://github.com/test-results/junitxml
+
+## Commit message and changelog semantics
+
+- Only commits starting with `feat:`, `fix:`, or containing `BREAKING CHANGE:` are included in the changelog by default.
+- Commits like `refactor:`, `chore:`, `test:`, `docs:`, `style:` are usually excluded unless configured otherwise.
+- Branch names do not affect the changelog, only commit types matter.
