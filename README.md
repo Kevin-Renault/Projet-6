@@ -4,8 +4,8 @@ Ce dépôt contient l’ensemble des livrables pour le projet 6 : l’applicat
 
 ## Structure du dépôt
 
-- `G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/` : Application Angular (frontend)
-- `G-rez-l-int-gration-et-la-livraison-continue-Application-Java/` : Application Java Spring Boot (backend)
+- `Frontend/` : Application Angular (frontend)
+- `Backend/` : Application Java Spring Boot (backend)
 
 Chaque dossier contient :
 - Son propre `README.md` détaillant l’installation, le build, les tests et l’utilisation spécifique à l’application.
@@ -18,13 +18,13 @@ Pour lancer chaque application séparément :
 
 ```sh
 # Backend
-cd G-rez-l-int-gration-et-la-livraison-continue-Application-Java
+cd Backend
 # Build et lancement
 ./gradlew bootJar
 docker compose up -d
 
 # Frontend
-cd ../G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
+cd ../Frontend
 # Build et lancement
 npm install
 npm run build --prod
@@ -33,8 +33,8 @@ docker compose up -d
 
 ## Pour aller plus loin
 
-  - [README Angular](G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/README.md)
-  - [README Java](G-rez-l-int-gration-et-la-livraison-continue-Application-Java/README.md)
+  - [README Angular](Frontend/README.md)
+  - [README Java](Backend/README.md)
 
 ## Mise en place de la CI/CD Docker avec GitHub Actions
 
@@ -176,7 +176,7 @@ Pour que semantic-release puisse push/tagger les commits, assure-toi que la prot
 - `SEMANTIC_RELEASE` met à jour `CHANGELOG.md`, crée un tag `vX.Y.Z` et publie une release GitHub (visible sur la page Releases et via `git tag`).
 - La release sur `dev` peut ensuite être mergée sur `main` (sans changer la version si aucun commit nouveau), ce qui maintient le changelog/tag en cohérence.
 - Le job `release` reconstruit puis retague les images Docker (`backend-vX.Y.Z` et `frontend-vX.Y.Z`) avec la version sémantique avant de les pousser vers GitHub Container Registry, garantissant que chaque release trouve ses artefacts versionnés.
-- Avant chaque commit de release, le script `scripts/sync-version.js` met à jour `package.json` et `G-rez-l-int-gration-et-la-livraison-continue-Application-Java/build.gradle` pour synchroniser la version calculée par semantic-release, puis `@semantic-release/git` ajoute ces fichiers à la release. Ce script est écrit en JavaScript pour pouvoir être exécuté directement par `node` sans compilation TypeScript supplémentaire dans le pipeline.
+- Avant chaque commit de release, le script `scripts/sync-version.js` met à jour `package.json` et `Backend/build.gradle` pour synchroniser la version calculée par semantic-release, puis `@semantic-release/git` ajoute ces fichiers à la release. Ce script est écrit en JavaScript pour pouvoir être exécuté directement par `node` sans compilation TypeScript supplémentaire dans le pipeline.
 
 ## Rapport JUnit XML et affichage dans le CI/CD
 

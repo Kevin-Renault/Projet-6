@@ -9,8 +9,8 @@ if [ -f "$ENV_FILE" ]; then
 	set +o allexport
 fi
 
-DEFAULT_ANGULAR_DIR=G-rez-l-int-gration-et-la-livraison-continue-Application-Angular
-DEFAULT_JAVA_DIR=G-rez-l-int-gration-et-la-livraison-continue-Application-Java
+DEFAULT_ANGULAR_DIR=Frontend
+DEFAULT_JAVA_DIR=Backend
 ANGULAR_DIR=${ANGULAR_DIR:-$DEFAULT_ANGULAR_DIR}
 JAVA_DIR=${JAVA_DIR:-$DEFAULT_JAVA_DIR}
 
