@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/Kevin-Renault/Projet-6/compare/v1.1.3...v2.0.0) (2026-03-26)
+
+
+### Documentation
+
+* update commit/changelog section ([2f61ff3](https://github.com/Kevin-Renault/Projet-6/commit/2f61ff3a3bf33b7050bd1b77744a928d7eb93dd1))
+
+
+### BREAKING CHANGES
+
+* project folder and path names have changed; update your scripts and references accordingly
+
 ## [1.1.3](https://github.com/Kevin-Renault/Projet-6/compare/v1.1.2...v1.1.3) (2026-03-20)
 
 
