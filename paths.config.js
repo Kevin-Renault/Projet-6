@@ -20,8 +20,8 @@ function loadEnv() {
 }
 
 const env = loadEnv();
-const ANGULAR_APP_DIR = env.ANGULAR_DIR || 'G-rez-l-int-gration-et-la-livraison-continue-Application-Angular';
-const JAVA_APP_DIR = env.JAVA_DIR || 'G-rez-l-int-gration-et-la-livraison-continue-Application-Java';
+const ANGULAR_APP_DIR = env.ANGULAR_DIR || 'Frontend';
+const JAVA_APP_DIR = env.JAVA_DIR || 'Backend';
 
 module.exports = {
     ROOT,
