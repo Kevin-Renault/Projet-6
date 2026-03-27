@@ -11,15 +11,55 @@ fi
 
 DEFAULT_ANGULAR_DIR=Frontend
 DEFAULT_JAVA_DIR=Backend
-ANGULAR_DIR=${ANGULAR_DIR:-$DEFAULT_ANGULAR_DIR}
-JAVA_DIR=${JAVA_DIR:-$DEFAULT_JAVA_DIR}
+
+find_angular_dir() {
+	local candidate
+	for candidate in "${ANGULAR_DIR:-}" "$DEFAULT_ANGULAR_DIR" . */; do
+		[ -n "$candidate" ] || continue
+		candidate=${candidate%/}
+		[ -d "$candidate" ] || continue
+		if [ -f "$candidate/angular.json" ]; then
+			printf '%s\n' "$candidate"
+			return 0
+		fi
+		if [ -f "$candidate/package.json" ] && grep -q '"@angular/core"' "$candidate/package.json" 2>/dev/null; then
+			printf '%s\n' "$candidate"
+			return 0
+		fi
+	done
+	return 1
+}
+
+find_java_dir() {
+	local candidate
+	for candidate in "${JAVA_DIR:-}" "$DEFAULT_JAVA_DIR" . */; do
+		[ -n "$candidate" ] || continue
+		candidate=${candidate%/}
+		[ -d "$candidate" ] || continue
+		if [ -f "$candidate/gradlew" ] || [ -f "$candidate/build.gradle" ] || [ -f "$candidate/pom.xml" ]; then
+			printf '%s\n' "$candidate"
+			return 0
+		fi
+	done
+	return 1
+}
+
+ANGULAR_DIR=$(find_angular_dir) || {
+	echo "Projet Angular introuvable."
+	exit 1
+}
+
+JAVA_DIR=$(find_java_dir) || {
+	echo "Projet Java introuvable."
+	exit 1
+}
 
 # Nettoyage des anciens rapports
 rm -rf test-results/
 rm -rf "$ANGULAR_DIR/coverage/"
 rm -rf "$ANGULAR_DIR/reports/"
 # Script pour lancer les tests backend (Java) et frontend (Angular)
-# et générer des rapports JUnit XML pour GitHub Actions
+# et gÃ©nÃ©rer des rapports JUnit XML pour GitHub Actions
 
 set -e
 
@@ -28,8 +68,8 @@ cd "$JAVA_DIR"
 
 echo "[Backend] Lancement des tests Java..."
 chmod +x ./gradlew
-./gradlew clean test --no-daemon --console=plain || echo "[Backend] Les tests Java ont échoué, on continue."
-# Les rapports JUnit sont générés dans build/test-results/test
+./gradlew clean test --no-daemon --console=plain || echo "[Backend] Les tests Java ont Ã©chouÃ©, on continue."
+# Les rapports JUnit sont gÃ©nÃ©rÃ©s dans build/test-results/test
 cd ..
 
 # Frontend Angular
@@ -38,10 +78,10 @@ cd "$ANGULAR_DIR"
 echo "[Frontend] Lancement des tests Angular..."
 npm install
 npm run test -- --watch=false --browsers=ChromeHeadless --reporters=junit,progress --code-coverage
-# Les rapports JUnit sont générés dans ./test-results/junit/
+# Les rapports JUnit sont gÃ©nÃ©rÃ©s dans ./test-results/junit/
 cd ..
 
-# Création du dossier test-results/ à la racine si besoin
+# CrÃ©ation du dossier test-results/ Ã  la racine si besoin
 mkdir -p test-results
 
 # Copie des rapports Java
@@ -58,7 +98,7 @@ if [ -d "$ANGULAR_DIR/reports" ]; then
 fi
 
 
-echo "\nRésumé de la couverture de code (Angular) :"
+echo "\nRÃ©sumÃ© de la couverture de code (Angular) :"
 COVERAGE_HTML="$ANGULAR_DIR/coverage/olympic-games-starter/index.html"
 if [ -f "$COVERAGE_HTML" ]; then
 	grep -A2 'Statements' "$COVERAGE_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Statements   : "$2" ( "$3" )"}'
@@ -66,18 +106,18 @@ if [ -f "$COVERAGE_HTML" ]; then
 	grep -A2 'Functions' "$COVERAGE_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Functions    : "$2" ( "$3" )"}'
 	grep -A2 'Lines' "$COVERAGE_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Lines        : "$2" ( "$3" )"}'
 else
-    echo "Pas de rapport de couverture trouvé."
+    echo "Pas de rapport de couverture trouvÃ©."
 fi
 
-# Résumé de la couverture backend Java (Jacoco)
-echo "\nRésumé de la couverture de code (Backend Java) :"
+# RÃ©sumÃ© de la couverture backend Java (Jacoco)
+echo "\nRÃ©sumÃ© de la couverture de code (Backend Java) :"
 JACOCO_HTML="$JAVA_DIR/build/reports/jacoco/test/html/index.html"
 if [ -f "$JACOCO_HTML" ]; then
 	grep -A2 'Covered Instructions' "$JACOCO_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Instructions : "$2" ( "$3" )"}'
 	grep -A2 'Covered Branches' "$JACOCO_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Branches     : "$2" ( "$3" )"}'
 	grep -A2 'Covered Methods' "$JACOCO_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Methods      : "$2" ( "$3" )"}'
 	grep -A2 'Covered Lines' "$JACOCO_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Lines        : "$2" ( "$3" )"}'
-	# Génération d'un fichier coverage-summary-backend.xml pour récupération CI
+	# GÃ©nÃ©ration d'un fichier coverage-summary-backend.xml pour rÃ©cupÃ©ration CI
 	BACKEND_COVERAGE_SUMMARY="$(
 		echo "=============================== Backend Coverage summary ==============================="
 		grep -A2 'Covered Instructions' "$JACOCO_HTML" | head -n 3 | sed -E 's/<[^>]+>//g' | paste -sd ' ' - | sed 's/  */ /g' | awk '{print "Instructions : "$2" ( "$3" )"}'
@@ -93,7 +133,7 @@ if [ -f "$JACOCO_HTML" ]; then
 	echo "]]>" >> test-results/coverage-summary-backend.xml
 	echo "</coverage-summary-backend>" >> test-results/coverage-summary-backend.xml
 else
-	echo "Pas de rapport de couverture Jacoco trouvé."
+	echo "Pas de rapport de couverture Jacoco trouvÃ©."
 fi
 ANGULAR_XML=$(ls test-results/TESTS-Chrome_Headless_*.xml 2>/dev/null | head -n1)
 COVERAGE_HTML="$ANGULAR_DIR/coverage/olympic-games-starter/index.html"
@@ -126,12 +166,12 @@ if [ -f "$ANGULAR_XML" ] && [ -f "$COVERAGE_HTML" ]; then
 	echo "$COVERAGE_SUMMARY" >> "$REPORT_XML"
 	echo "]]></angular-coverage>" >> "$REPORT_XML"
 
-	# Ajout du résumé backend Jacoco si dispo
+	# Ajout du rÃ©sumÃ© backend Jacoco si dispo
 	if [ -f "test-results/coverage-summary-backend.xml" ]; then
 		awk '/<coverage-summary-backend>/,/<\/coverage-summary-backend>/' test-results/coverage-summary-backend.xml >> "$REPORT_XML"
 	fi
 
-	# Génération du tableau des résultats backend
+	# GÃ©nÃ©ration du tableau des rÃ©sultats backend
 	echo "  <backend-test-summary><![CDATA[" >> "$REPORT_XML"
 	echo -e "Class\tTests\tFailures\tIgnored\tDuration\tSuccess rate" >> "$REPORT_XML"
 	for xml in test-results/TEST-fr.oc.devops.backend.services.*.xml; do
@@ -149,6 +189,6 @@ if [ -f "$ANGULAR_XML" ] && [ -f "$COVERAGE_HTML" ]; then
 	echo "]]></backend-test-summary>" >> "$REPORT_XML"
 	echo "</report-summary>" >> "$REPORT_XML"
 fi
-echo "Tests terminés. Les rapports JUnit sont disponibles dans :"
+echo "Tests terminÃ©s. Les rapports JUnit sont disponibles dans :"
 echo "- Tous les rapports : test-results/"
 ls -l test-results/
