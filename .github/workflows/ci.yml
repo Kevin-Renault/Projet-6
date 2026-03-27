@@ -23,6 +23,20 @@ jobs: # Définition des jobs (briques)
       steps:
         - name: Checkout code
           uses: actions/checkout@v4
+        # Réutilise les dépendances Gradle entre deux exécutions du workflow.
+        - name: Set up Java with Gradle cache
+          uses: actions/setup-java@v4
+          with:
+            distribution: temurin
+            java-version: '21'
+            cache: gradle
+        # Réutilise le cache npm à partir du package-lock du frontend.
+        - name: Set up Node.js with npm cache
+          uses: actions/setup-node@v4
+          with:
+            node-version: '24'
+            cache: npm
+            cache-dependency-path: Frontend/package-lock.json
         - name: Ensure run-tests.sh is executable
           run: chmod +x ./run-tests.sh
         - name: Run all tests (backend & frontend)
@@ -49,16 +63,17 @@ jobs: # Définition des jobs (briques)
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.ACTIONS_TOKEN }}
-      - name: Build Docker image # Build l'image Docker backend
+      # Réutilise les couches Docker déjà construites pour accélérer les builds d'image.
+      - name: Build and push Docker image # Build et pousse l'image Docker backend
         run: |
           REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           TAG=backend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
-          docker build -t ghcr.io/$REPO:$TAG "$JAVA_DIR"
-      - name: Push Docker image # Pousse l'image Docker backend
-        run: |
-          REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
-          TAG=backend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
-          docker push ghcr.io/$REPO:$TAG
+          docker buildx build \
+            --cache-from type=gha,scope=backend \
+            --cache-to type=gha,mode=max,scope=backend \
+            --tag ghcr.io/$REPO:$TAG \
+            --push \
+            "$JAVA_DIR"
 
   validate-docker-backend:
     runs-on: ubuntu-latest
@@ -80,6 +95,7 @@ jobs: # Définition des jobs (briques)
           TAG=backend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
           docker pull ghcr.io/$REPO:$TAG
           docker tag ghcr.io/$REPO:$TAG workshop-organizer
+      # Vérifie que l'image publiée démarre réellement avec le compose backend.
       - name: Validate backend with docker-compose
         run: |
           cd "$JAVA_DIR"
@@ -107,16 +123,17 @@ jobs: # Définition des jobs (briques)
           registry: ghcr.io # Spécifie le registre
           username: ${{ github.actor }} # Utilise l'utilisateur GitHub
           password: ${{ secrets.ACTIONS_TOKEN }} # Utilise le token GitHub
-      - name: Build Docker image # Build l'image Docker frontend
+      # Réutilise les couches Docker déjà construites pour accélérer les builds d'image.
+      - name: Build and push Docker image # Build et pousse l'image Docker frontend
         run: |
           REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           TAG=frontend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
-          docker build -t ghcr.io/$REPO:$TAG "$ANGULAR_DIR"
-      - name: Push Docker image # Pousse l'image Docker vers le registre GitHub
-        run: |
-          REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
-          TAG=frontend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
-          docker push ghcr.io/$REPO:$TAG
+          docker buildx build \
+            --cache-from type=gha,scope=frontend \
+            --cache-to type=gha,mode=max,scope=frontend \
+            --tag ghcr.io/$REPO:$TAG \
+            --push \
+            "$ANGULAR_DIR"
   
   validate-docker-frontend:
     runs-on: ubuntu-latest
@@ -138,6 +155,7 @@ jobs: # Définition des jobs (briques)
           TAG=frontend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
           docker pull ghcr.io/$REPO:$TAG
           docker tag ghcr.io/$REPO:$TAG workshop-front
+      # Vérifie que l'image publiée sert bien l'application via le compose frontend.
       - name: Validate frontend with docker-compose
         run: |
           cd "$ANGULAR_DIR"
@@ -151,6 +169,7 @@ jobs: # Définition des jobs (briques)
     needs: [validate-docker-backend, validate-docker-frontend]
     if: always()
     steps:
+      # Récupère les rapports produits par le job de test pour générer un résumé lisible.
       - name: Download test results artifact
         uses: actions/download-artifact@v4
         with:
