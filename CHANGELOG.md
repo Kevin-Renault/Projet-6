@@ -1,3 +1,16 @@
+# [2.1.0](https://github.com/Kevin-Renault/Projet-6/compare/v2.0.0...v2.1.0) (2026-03-27)
+
+
+### Bug Fixes
+
+* configure dev as prerelease and harden release workflow ([9c72df9](https://github.com/Kevin-Renault/Projet-6/commit/9c72df9f02909b0577e6cfdc0118e1dd8108314f))
+* persist postgres data with a named volume ([9cbc197](https://github.com/Kevin-Renault/Projet-6/commit/9cbc197529978e61bb16d7920e3ebb5541278b2a))
+
+
+### Features
+
+* auto-detect Angular and Java project directories ([eb58209](https://github.com/Kevin-Renault/Projet-6/commit/eb582093661c18743fe43266f916cd66f352556f))
+
 # [2.0.0](https://github.com/Kevin-Renault/Projet-6/compare/v1.1.3...v2.0.0) (2026-03-26)
 
 
