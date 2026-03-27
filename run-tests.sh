@@ -54,6 +54,7 @@ JAVA_DIR=$(find_java_dir) || {
 	exit 1
 }
 
+
 # Nettoyage des anciens rapports
 rm -rf test-results/
 rm -rf "$ANGULAR_DIR/coverage/"
