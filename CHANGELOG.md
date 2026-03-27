@@ -1,3 +1,10 @@
+## [2.1.1-dev.3](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.2...v2.1.1-dev.3) (2026-03-27)
+
+
+### Bug Fixes
+
+* switch token ([c044a6c](https://github.com/Kevin-Renault/Projet-6/commit/c044a6cb057ff25c37ac29286cfa5edea730417f))
+
 ## [2.1.1-dev.2](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.1...v2.1.1-dev.2) (2026-03-27)
 
 
