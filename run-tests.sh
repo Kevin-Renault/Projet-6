@@ -9,6 +9,7 @@ if [ -f "$ENV_FILE" ]; then
 	set +o allexport
 fi
 
+
 DEFAULT_ANGULAR_DIR=Frontend
 DEFAULT_JAVA_DIR=Backend
 
