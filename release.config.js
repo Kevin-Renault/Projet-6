@@ -4,8 +4,11 @@ const {
 } = require('./paths.config');
 
 module.exports = {
-    // Target the branches that should trigger automated releases
-    branches: ['main', 'dev'],
+    // main publishes stable releases, dev publishes prereleases.
+    branches: [
+        'main',
+        { name: 'dev', channel: 'dev', prerelease: 'dev' }
+    ],
     plugins: [
         '@semantic-release/commit-analyzer',
         '@semantic-release/release-notes-generator',
