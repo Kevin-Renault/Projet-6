@@ -9,7 +9,6 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    # Ensures the workflow token can push commits/tags and write package metadata.
     permissions:
       contents: write 
       packages: write 
@@ -31,11 +30,10 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.ACTIONS_TOKEN }}
-      # Run semantic-release with the PAT that has repo scope so it can push tags back to dev/main.
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Run semantic-release          
         env:
-          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}          
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
         run: npx semantic-release
       - name: Build and push backend release image
         if: env.RELEASE_VERSION != ''
@@ -51,4 +49,3 @@ jobs:
           TAG=frontend-v${RELEASE_VERSION}
           docker build -t ghcr.io/$REPO:$TAG "$ANGULAR_DIR"
           docker push ghcr.io/$REPO:$TAG
-
