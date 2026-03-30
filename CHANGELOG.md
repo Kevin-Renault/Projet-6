@@ -1,3 +1,11 @@
+## [2.1.1-dev.6](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.5...v2.1.1-dev.6) (2026-03-30)
+
+
+### Bug Fixes
+
+* lower case ([bf9cad0](https://github.com/Kevin-Renault/Projet-6/commit/bf9cad0adf00e446ae6a22334e79f9cee258016f))
+* lower case 2 ([44d87b6](https://github.com/Kevin-Renault/Projet-6/commit/44d87b6ab10f30d9173f3594962aff7d887bd580))
+
 ## [2.1.1-dev.5](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.4...v2.1.1-dev.5) (2026-03-30)
 
 
