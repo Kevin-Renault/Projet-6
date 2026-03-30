@@ -63,7 +63,7 @@ jobs:
         with:
           context: ${{ env.JAVA_DIR }}
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/projet-6:backend-v${{ env.RELEASE_VERSION }}
+          tags: ghcr.io/${{ github.repository_owner | lower }}/projet-6:backend-v${{ env.RELEASE_VERSION }}
 
       - name: Build and push frontend release image
         if: env.RELEASE_VERSION != ''
@@ -71,5 +71,5 @@ jobs:
         with:
           context: ${{ env.ANGULAR_DIR }}
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/projet-6:frontend-v${{ env.RELEASE_VERSION }}
+          tags: ghcr.io/${{ github.repository_owner | lower }}/projet-6:frontend-v${{ env.RELEASE_VERSION }}
 
