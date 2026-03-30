@@ -1,3 +1,10 @@
+## [2.1.1-dev.5](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.4...v2.1.1-dev.5) (2026-03-30)
+
+
+### Bug Fixes
+
+* setup-buildx-action + build-push-action ([564467b](https://github.com/Kevin-Renault/Projet-6/commit/564467bbe181e0b42230f93f60514c27d42f1eb4))
+
 ## [2.1.1-dev.4](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.3...v2.1.1-dev.4) (2026-03-30)
 
 
