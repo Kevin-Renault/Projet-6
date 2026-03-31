@@ -64,6 +64,13 @@ Ce dépot utilise un pipeline GitHub Actions réutilisable (`.github/workflows/c
 - Les branches `main` et `dev` sont déclarées dans `.github/release.config.js` ; `main` publie des releases stables (tags `vX.Y.Z`), `dev` génère des prereleases (`vX.Y.Z-dev.N`).
 - Exemple de commande pour créer un commit visible dans le changelog : `git commit -am "feat: align release docs"`.
 
+#### Fluidifier le versionning entre `dev` et `main`
+
+- Ne modifie jamais `package.json` / `Backend/build.gradle` manuellement : `semantic-release` et `scripts/sync-version.js` s’en chargent.
+- Avant de créer ou mettre à jour une PR, récupère les derniers commits de `dev` et rebase ta branche dessus pour intégrer le bump automatique (`git fetch && git rebase origin/dev`).
+- Si la PR est en conflit uniquement à cause de `package.json`/`build.gradle`, accepte les changements issus de `dev` (le commit de release) puis pousse un rebase propre ; la release sera déjà dans `dev` donc il ne reste qu’à reporter les fonctionnalités.
+- Après une release sur `dev`, synchronise `main` en important les commits de `dev` (`git checkout main && git merge --ff-only origin/dev` ou `rebase`) pour que `semantic-release` trouve les mêmes versions et n’ajoute pas de nouveaux commits de bump.
+
 L’étape `merge-report` souhaite expliciter le résultat des tests : elle télécharge l’artéfact `test-results-all`, liste son contenu et extrait la partie texte de `Report-summary.xml` pour l’insérer dans `GITHUB_STEP_SUMMARY`.
 
 ### Scripts et rapports
