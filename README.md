@@ -2,6 +2,19 @@
 
 Ce dépôt contient l’ensemble des livrables pour le projet 6 : l’application Angular (frontend) et l’application Java Spring Boot (backend), toutes deux prêtes à être conteneurisées et orchestrées avec Docker.
 
+
+## Sommaire
+
+- [Structure du dépôt](#structure-du-d%C3%A9p%C3%B4t)
+- [Lancement rapide (global)](#lancement-rapide-global)
+- [Pour aller plus loin](#pour-aller-plus-loin)
+- [Mise en place de la CI/CD Docker avec GitHub Actions](#mise-en-place-de-la-cicd-docker-avec-github-actions)
+   - [Versionning automatique](#versionning-automatique)
+   - [Scripts et rapports](#scripts-et-rapports)
+- [Validation des images Docker dans la CI/CD](#validation-des-images-docker-dans-la-ci-cd)
+- [FAQ – Problèmes courants](#faq--probl%C3%A8mes-courants)
+
+
 ## Structure du dépôt
 
 - `Frontend/` : Application Angular (frontend)
@@ -43,6 +56,13 @@ Ce dépot utilise un pipeline GitHub Actions réutilisable (`.github/workflows/c
 - construire et pousser les images Docker vers GitHub Container Registry (back et front),
 - valider les images via `docker compose up` + vérification d’un endpoint,
 - fusionner tous les rapports JUnit (`test-results/*.xml`) dans `Report-summary.xml` puis afficher un résumé directement dans la page GitHub Actions à l’aide du job `merge-report`.
+
+### Versionning automatique
+
+- Nous utilisons `semantic-release` avec les conventions Conventional Commits pour déterminer `major`, `minor`, `patch` sans intervention manuelle.
+- Les commits `fix:` déclenchent un patch (`vX.Y.Z`), `feat:` un minor, et `BREAKING CHANGE` une release majeure.
+- Les branches `main` et `dev` sont déclarées dans `.github/release.config.js` ; `main` publie des releases stables (tags `vX.Y.Z`), `dev` génère des prereleases (`vX.Y.Z-dev.N`).
+- Exemple de commande pour créer un commit visible dans le changelog : `git commit -am "feat: align release docs"`.
 
 L’étape `merge-report` souhaite expliciter le résultat des tests : elle télécharge l’artéfact `test-results-all`, liste son contenu et extrait la partie texte de `Report-summary.xml` pour l’insérer dans `GITHUB_STEP_SUMMARY`.
 
