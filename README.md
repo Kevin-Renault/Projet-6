@@ -175,6 +175,7 @@ Pour que semantic-release puisse push/tagger les commits, assure-toi que la prot
 - Utilise [Conventional Commits](https://www.conventionalcommits.org) pour déclencher un `patch`/`minor`/`major`.
 - `SEMANTIC_RELEASE` met à jour `CHANGELOG.md`, crée un tag `vX.Y.Z` et publie une release GitHub (visible sur la page Releases et via `git tag`).
 - La release sur `dev` peut ensuite être mergée sur `main` (sans changer la version si aucun commit nouveau), ce qui maintient le changelog/tag en cohérence.
+- Quand une release est publiée, le workflow pousse aussi le package frontend vers GitHub Packages (registre npm `npm.pkg.github.com`) et l'artefact backend vers GitHub Packages (registre Maven `maven.pkg.github.com`) avec le même `ACTIONS_TOKEN`.
 - Le job `release` reconstruit puis retague les images Docker (`backend-vX.Y.Z` et `frontend-vX.Y.Z`) avec la version sémantique avant de les pousser vers GitHub Container Registry, garantissant que chaque release trouve ses artefacts versionnés.
 - Avant chaque commit de release, le script `scripts/sync-version.js` met à jour `package.json` et `Backend/build.gradle` pour synchroniser la version calculée par semantic-release, puis `@semantic-release/git` ajoute ces fichiers à la release. Ce script est écrit en JavaScript pour pouvoir être exécuté directement par `node` sans compilation TypeScript supplémentaire dans le pipeline.
 
