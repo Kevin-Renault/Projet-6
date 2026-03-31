@@ -9,6 +9,7 @@ if [ -f "$ENV_FILE" ]; then
 	set +o allexport
 fi
 
+
 DEFAULT_ANGULAR_DIR=Frontend
 DEFAULT_JAVA_DIR=Backend
 
@@ -53,6 +54,7 @@ JAVA_DIR=$(find_java_dir) || {
 	echo "Projet Java introuvable."
 	exit 1
 }
+
 
 # Nettoyage des anciens rapports
 rm -rf test-results/

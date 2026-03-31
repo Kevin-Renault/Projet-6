@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'fr.oc.devops'
-version = '2.1.0'
+version = '2.2.0-dev.6'
 
 repositories {
 	mavenCentral()
@@ -76,6 +76,9 @@ war {
     enabled = false
 }
 
+def githubRepository = System.getenv('GITHUB_REPOSITORY')
+def gitlabProjectId = System.getenv('GITLAB_PROJECT_ID')
+
 publishing {
     publications {
 		MavenPublication(MavenPublication) {
@@ -83,15 +86,28 @@ publishing {
 		}
     }
     repositories {
-		maven {
-			url "https://gitlab.com/api/v4/projects/$System.env.GITLAB_PROJECT_ID/packages/maven"
-			name "GitLab"
-			credentials(HttpHeaderCredentials) {
-				name = System.getenv("GITLAB_TOKEN_NAME")
-				value = System.getenv("GITLAB_TOKEN")
+		if (githubRepository) {
+			maven {
+				name = 'GitHubPackages'
+				url = uri("https://maven.pkg.github.com/${githubRepository}")
+				credentials {
+					username = System.getenv('GITHUB_ACTOR')
+					password = System.getenv('GITHUB_TOKEN')
+				}
 			}
-			authentication {
-				header(HttpHeaderAuthentication)
+		}
+
+		if (gitlabProjectId) {
+			maven {
+				url "https://gitlab.com/api/v4/projects/${gitlabProjectId}/packages/maven"
+				name "GitLab"
+				credentials(HttpHeaderCredentials) {
+					name = System.getenv("GITLAB_TOKEN_NAME")
+					value = System.getenv("GITLAB_TOKEN")
+				}
+				authentication {
+					header(HttpHeaderAuthentication)
+				}
 			}
 		}
     }

@@ -1,9 +1,100 @@
+# [2.2.0-dev.6](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.5...v2.2.0-dev.6) (2026-03-31)
+
+
+### Bug Fixes
+
+* repo information for front publishing ([33153ae](https://github.com/Kevin-Renault/Projet-6/commit/33153ae4550eb11fc90a7eb251e8f040160c0314))
+
+# [2.2.0-dev.5](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.4...v2.2.0-dev.5) (2026-03-31)
+
+
+### Bug Fixes
+
+* add log ([6e67324](https://github.com/Kevin-Renault/Projet-6/commit/6e6732447f8aa93ac23b2048fae2de856c01217f))
+
+# [2.2.0-dev.4](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.3...v2.2.0-dev.4) (2026-03-31)
+
+
+### Bug Fixes
+
+* test ([a586a25](https://github.com/Kevin-Renault/Projet-6/commit/a586a25504579d02b64ff4396d623d07a107dbb8))
+
+# [2.2.0-dev.3](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.2...v2.2.0-dev.3) (2026-03-31)
+
+
+### Bug Fixes
+
+* make gradle wrapper executable ([f9d4089](https://github.com/Kevin-Renault/Projet-6/commit/f9d40896707639349ab7f105529a3777731dea48))
+
+# [2.2.0-dev.2](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.1...v2.2.0-dev.2) (2026-03-31)
+
+
+### Bug Fixes
+
+* add latest for tag ([6f207b4](https://github.com/Kevin-Renault/Projet-6/commit/6f207b4022cf3afc8133dba0242cca4aee27ab29))
+
+# [2.2.0-dev.1](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.7...v2.2.0-dev.1) (2026-03-31)
+
+
+### Features
+
+* publish packages to GitHub Packages ([a55006a](https://github.com/Kevin-Renault/Projet-6/commit/a55006a643a6b33ebe1e4ab1596f66647ab50dbd))
+
+## [2.1.1-dev.7](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.6...v2.1.1-dev.7) (2026-03-31)
+
+
+### Bug Fixes
+
+* test push ([a28a814](https://github.com/Kevin-Renault/Projet-6/commit/a28a814c8d622288eb9e5b6ded02b61d4ec7fd03))
+
+## [2.1.1-dev.6](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.5...v2.1.1-dev.6) (2026-03-30)
+
+
+### Bug Fixes
+
+* lower case ([bf9cad0](https://github.com/Kevin-Renault/Projet-6/commit/bf9cad0adf00e446ae6a22334e79f9cee258016f))
+* lower case 2 ([44d87b6](https://github.com/Kevin-Renault/Projet-6/commit/44d87b6ab10f30d9173f3594962aff7d887bd580))
+
+## [2.1.1-dev.5](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.4...v2.1.1-dev.5) (2026-03-30)
+
+
+### Bug Fixes
+
+* setup-buildx-action + build-push-action ([564467b](https://github.com/Kevin-Renault/Projet-6/commit/564467bbe181e0b42230f93f60514c27d42f1eb4))
+
+## [2.1.1-dev.4](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.3...v2.1.1-dev.4) (2026-03-30)
+
+
+### Bug Fixes
+
+* package push ([f7f0f1d](https://github.com/Kevin-Renault/Projet-6/commit/f7f0f1d9076383155fe201f0a9218f5870ff9d1c))
+
+## [2.1.1-dev.3](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.2...v2.1.1-dev.3) (2026-03-27)
+
+
+### Bug Fixes
+
+* switch token ([c044a6c](https://github.com/Kevin-Renault/Projet-6/commit/c044a6cb057ff25c37ac29286cfa5edea730417f))
+
+## [2.1.1-dev.2](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.1...v2.1.1-dev.2) (2026-03-27)
+
+
+### Bug Fixes
+
+* configure dev as prerelease and harden release workflow ([3ffabe6](https://github.com/Kevin-Renault/Projet-6/commit/3ffabe62f83cfd77a41ca9fe4403888a47df7c90))
+
+## [2.1.1-dev.1](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.0...v2.1.1-dev.1) (2026-03-27)
+
+
+### Bug Fixes
+
+* configure dev as prerelease and harden release workflow ([b2d4719](https://github.com/Kevin-Renault/Projet-6/commit/b2d47197a7746f15c2fd02e5dce6b4be0a2294b5))
+
 # [2.1.0](https://github.com/Kevin-Renault/Projet-6/compare/v2.0.0...v2.1.0) (2026-03-27)
 
 
 ### Bug Fixes
 
-* configure dev as prerelease and harden release workflow ([9c72df9](https://github.com/Kevin-Renault/Projet-6/commit/9c72df9f02909b0577e6cfdc0118e1dd8108314f))
 * persist postgres data with a named volume ([9cbc197](https://github.com/Kevin-Renault/Projet-6/commit/9cbc197529978e61bb16d7920e3ebb5541278b2a))
 
 
