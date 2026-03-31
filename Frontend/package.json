@@ -1,6 +1,14 @@
 {
   "name": "@oc-expert-devops-training/olympic-games-starter",
   "version": "2.1.1-dev.7",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kevin-Renault/Projet-6.git"
+  },
+  "homepage": "https://github.com/Kevin-Renault/Projet-6",
+  "bugs": {
+    "url": "https://github.com/Kevin-Renault/Projet-6/issues"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
