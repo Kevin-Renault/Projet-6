@@ -1,3 +1,10 @@
+## [2.1.1-dev.7](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.6...v2.1.1-dev.7) (2026-03-31)
+
+
+### Bug Fixes
+
+* test push ([a28a814](https://github.com/Kevin-Renault/Projet-6/commit/a28a814c8d622288eb9e5b6ded02b61d4ec7fd03))
+
 ## [2.1.1-dev.6](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.5...v2.1.1-dev.6) (2026-03-30)
 
 
