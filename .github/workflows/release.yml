@@ -95,6 +95,11 @@ jobs:
           npm pkg set publishConfig.registry="https://npm.pkg.github.com"
           npm publish --tag "${NPM_DIST_TAG}"
 
+      - name: Make Gradle wrapper executable
+        if: env.RELEASE_VERSION != ''
+        working-directory: ${{ env.JAVA_DIR }}
+        run: chmod +x ./gradlew
+
       - name: Publish backend package to GitHub Packages
         if: env.RELEASE_VERSION != ''
         working-directory: ${{ env.JAVA_DIR }}
