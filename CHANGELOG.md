@@ -1,3 +1,10 @@
+# [2.2.0-dev.5](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.4...v2.2.0-dev.5) (2026-03-31)
+
+
+### Bug Fixes
+
+* add log ([6e67324](https://github.com/Kevin-Renault/Projet-6/commit/6e6732447f8aa93ac23b2048fae2de856c01217f))
+
 # [2.2.0-dev.4](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.3...v2.2.0-dev.4) (2026-03-31)
 
 
