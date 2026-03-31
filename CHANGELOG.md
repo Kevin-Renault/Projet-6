@@ -1,3 +1,10 @@
+# [2.2.0-dev.7](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.6...v2.2.0-dev.7) (2026-03-31)
+
+
+### Bug Fixes
+
+* configure dev as prerelease and harden release workflow ([9c72df9](https://github.com/Kevin-Renault/Projet-6/commit/9c72df9f02909b0577e6cfdc0118e1dd8108314f))
+
 # [2.2.0-dev.6](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.5...v2.2.0-dev.6) (2026-03-31)
 
 
