@@ -76,21 +76,23 @@ When you’re ready to package the application for deployment, create a deployab
 
 The generated war file can be used with many application servers such as Tomcat, Wildfly...
 
-## Publishing to GitLab Registry
+## Publishing to GitHub Packages
 
-To publish your application to a GitLab registry, follow these steps:
+The release workflow now publishes the backend artifact to GitHub Packages (`maven.pkg.github.com`). It uses the Gradle `maven-publish` configuration defined in `Backend/build.gradle` and runs `publishMavenPublicationToGitHubPackagesRepository` via the release job with `GITHUB_TOKEN`.
 
-1. Set up your GitLab project.
-2. Ensure you have the following environment variables configured:
+To reproduce locally:
 
-   - GITLAB_PROJECT_ID: The ID of your GitLab project.
-   - GITLAB_TOKEN_NAME: The name of the GitLab access token.
-   - GITLAB_TOKEN: Your GitLab access token.
+1. Configure your `~/.m2/settings.xml` or Gradle `publish` block with:
 
-3. Execute the following command to publish your application:
-   ```bash
-   ./gradlew publish
+   ```xml
+   <server>
+     <id>GitHubPackages</id>
+     <username>${env.GITHUB_ACTOR}</username>
+     <password>${env.GITHUB_TOKEN}</password>
+   </server>
    ```
-   Remember to replace placeholders with actual values specific to your project.
+
+2. Use the repository URL `https://maven.pkg.github.com/Kevin-Renault/Projet-6`.
+3. Run `./gradlew publishMavenPublicationToGitHubPackagesRepository` to push the WAR + POM to GitHub Packages.
 
 Feel free to enhance this README with additional details, such as API endpoints, security considerations, and deployment instructions. Happy organizing! 🚀
