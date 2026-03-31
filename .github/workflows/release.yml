@@ -16,6 +16,7 @@ jobs:
       ANGULAR_DIR: Frontend
       JAVA_DIR: Backend
       RELEASE_VERSION: ''
+      NPM_DIST_TAG: latest
       REPO_LOWER: ''
       GITHUB_PACKAGES_SCOPE: ''
       FRONTEND_PACKAGE_NAME: ''
@@ -61,8 +62,14 @@ jobs:
           OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           FRONTEND_PACKAGE_NAME=$(node -p "require('./${ANGULAR_DIR}/package.json').name.split('/').pop()")
+          if [[ "${RELEASE_VERSION}" == *-* ]]; then
+            NPM_DIST_TAG=$(echo "${RELEASE_VERSION}" | sed -E 's/^[^-]+-([^.]+).*/\1/')
+          else
+            NPM_DIST_TAG=latest
+          fi
           echo "GITHUB_PACKAGES_SCOPE=@${OWNER}" >> "$GITHUB_ENV"
           echo "FRONTEND_PACKAGE_NAME=${FRONTEND_PACKAGE_NAME}" >> "$GITHUB_ENV"
+          echo "NPM_DIST_TAG=${NPM_DIST_TAG}" >> "$GITHUB_ENV"
           echo "REPO_LOWER=${REPO}" >> "$GITHUB_ENV"
 
       - name: Configure npm for GitHub Packages
@@ -86,7 +93,7 @@ jobs:
         run: |
           npm pkg set name="${GITHUB_PACKAGES_SCOPE}/${FRONTEND_PACKAGE_NAME}"
           npm pkg set publishConfig.registry="https://npm.pkg.github.com"
-          npm publish
+          npm publish --tag "${NPM_DIST_TAG}"
 
       - name: Publish backend package to GitHub Packages
         if: env.RELEASE_VERSION != ''
