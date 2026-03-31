@@ -1,3 +1,10 @@
+# [2.2.0-dev.2](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.1...v2.2.0-dev.2) (2026-03-31)
+
+
+### Bug Fixes
+
+* add latest for tag ([6f207b4](https://github.com/Kevin-Renault/Projet-6/commit/6f207b4022cf3afc8133dba0242cca4aee27ab29))
+
 # [2.2.0-dev.1](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.7...v2.2.0-dev.1) (2026-03-31)
 
 
