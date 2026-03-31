@@ -1,3 +1,28 @@
+# [2.2.0](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.0...v2.2.0) (2026-03-31)
+
+
+### Bug Fixes
+
+* add latest for tag ([6f207b4](https://github.com/Kevin-Renault/Projet-6/commit/6f207b4022cf3afc8133dba0242cca4aee27ab29))
+* add log ([6e67324](https://github.com/Kevin-Renault/Projet-6/commit/6e6732447f8aa93ac23b2048fae2de856c01217f))
+* configure dev as prerelease and harden release workflow ([9c72df9](https://github.com/Kevin-Renault/Projet-6/commit/9c72df9f02909b0577e6cfdc0118e1dd8108314f))
+* configure dev as prerelease and harden release workflow ([b2d4719](https://github.com/Kevin-Renault/Projet-6/commit/b2d47197a7746f15c2fd02e5dce6b4be0a2294b5))
+* configure dev as prerelease and harden release workflow ([3ffabe6](https://github.com/Kevin-Renault/Projet-6/commit/3ffabe62f83cfd77a41ca9fe4403888a47df7c90))
+* lower case ([bf9cad0](https://github.com/Kevin-Renault/Projet-6/commit/bf9cad0adf00e446ae6a22334e79f9cee258016f))
+* lower case 2 ([44d87b6](https://github.com/Kevin-Renault/Projet-6/commit/44d87b6ab10f30d9173f3594962aff7d887bd580))
+* make gradle wrapper executable ([f9d4089](https://github.com/Kevin-Renault/Projet-6/commit/f9d40896707639349ab7f105529a3777731dea48))
+* package push ([f7f0f1d](https://github.com/Kevin-Renault/Projet-6/commit/f7f0f1d9076383155fe201f0a9218f5870ff9d1c))
+* repo information for front publishing ([33153ae](https://github.com/Kevin-Renault/Projet-6/commit/33153ae4550eb11fc90a7eb251e8f040160c0314))
+* setup-buildx-action + build-push-action ([564467b](https://github.com/Kevin-Renault/Projet-6/commit/564467bbe181e0b42230f93f60514c27d42f1eb4))
+* switch token ([c044a6c](https://github.com/Kevin-Renault/Projet-6/commit/c044a6cb057ff25c37ac29286cfa5edea730417f))
+* test ([a586a25](https://github.com/Kevin-Renault/Projet-6/commit/a586a25504579d02b64ff4396d623d07a107dbb8))
+* test push ([a28a814](https://github.com/Kevin-Renault/Projet-6/commit/a28a814c8d622288eb9e5b6ded02b61d4ec7fd03))
+
+
+### Features
+
+* publish packages to GitHub Packages ([a55006a](https://github.com/Kevin-Renault/Projet-6/commit/a55006a643a6b33ebe1e4ab1596f66647ab50dbd))
+
 # [2.2.0-dev.6](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.5...v2.2.0-dev.6) (2026-03-31)
 
 
