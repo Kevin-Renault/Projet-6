@@ -1,3 +1,10 @@
+# [2.2.0-dev.6](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.5...v2.2.0-dev.6) (2026-03-31)
+
+
+### Bug Fixes
+
+* repo information for front publishing ([33153ae](https://github.com/Kevin-Renault/Projet-6/commit/33153ae4550eb11fc90a7eb251e8f040160c0314))
+
 # [2.2.0-dev.5](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.4...v2.2.0-dev.5) (2026-03-31)
 
 
