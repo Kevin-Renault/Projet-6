@@ -117,3 +117,4 @@ jobs:
           context: ${{ env.ANGULAR_DIR }}
           push: true
           tags: ghcr.io/${{ env.REPO_LOWER }}:frontend-v${{ env.RELEASE_VERSION }}
+
