@@ -1,3 +1,10 @@
+# [2.2.0-dev.4](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.3...v2.2.0-dev.4) (2026-03-31)
+
+
+### Bug Fixes
+
+* test ([a586a25](https://github.com/Kevin-Renault/Projet-6/commit/a586a25504579d02b64ff4396d623d07a107dbb8))
+
 # [2.2.0-dev.3](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.2...v2.2.0-dev.3) (2026-03-31)
 
 
