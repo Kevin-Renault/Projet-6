@@ -1,3 +1,10 @@
+# [2.2.0-dev.3](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.2...v2.2.0-dev.3) (2026-03-31)
+
+
+### Bug Fixes
+
+* make gradle wrapper executable ([f9d4089](https://github.com/Kevin-Renault/Projet-6/commit/f9d40896707639349ab7f105529a3777731dea48))
+
 # [2.2.0-dev.2](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.1...v2.2.0-dev.2) (2026-03-31)
 
 
