@@ -1,3 +1,38 @@
+# [2.2.0-dev.5](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.4...v2.2.0-dev.5) (2026-03-31)
+
+
+### Bug Fixes
+
+* add log ([6e67324](https://github.com/Kevin-Renault/Projet-6/commit/6e6732447f8aa93ac23b2048fae2de856c01217f))
+
+# [2.2.0-dev.4](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.3...v2.2.0-dev.4) (2026-03-31)
+
+
+### Bug Fixes
+
+* test ([a586a25](https://github.com/Kevin-Renault/Projet-6/commit/a586a25504579d02b64ff4396d623d07a107dbb8))
+
+# [2.2.0-dev.3](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.2...v2.2.0-dev.3) (2026-03-31)
+
+
+### Bug Fixes
+
+* make gradle wrapper executable ([f9d4089](https://github.com/Kevin-Renault/Projet-6/commit/f9d40896707639349ab7f105529a3777731dea48))
+
+# [2.2.0-dev.2](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0-dev.1...v2.2.0-dev.2) (2026-03-31)
+
+
+### Bug Fixes
+
+* add latest for tag ([6f207b4](https://github.com/Kevin-Renault/Projet-6/commit/6f207b4022cf3afc8133dba0242cca4aee27ab29))
+
+# [2.2.0-dev.1](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.7...v2.2.0-dev.1) (2026-03-31)
+
+
+### Features
+
+* publish packages to GitHub Packages ([a55006a](https://github.com/Kevin-Renault/Projet-6/commit/a55006a643a6b33ebe1e4ab1596f66647ab50dbd))
+
 ## [2.1.1-dev.7](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.6...v2.1.1-dev.7) (2026-03-31)
 
 
