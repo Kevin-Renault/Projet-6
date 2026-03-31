@@ -1,3 +1,10 @@
+# [2.2.0-dev.1](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.7...v2.2.0-dev.1) (2026-03-31)
+
+
+### Features
+
+* publish packages to GitHub Packages ([a55006a](https://github.com/Kevin-Renault/Projet-6/commit/a55006a643a6b33ebe1e4ab1596f66647ab50dbd))
+
 ## [2.1.1-dev.7](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.1-dev.6...v2.1.1-dev.7) (2026-03-31)
 
 

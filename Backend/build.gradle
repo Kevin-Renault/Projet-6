@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'fr.oc.devops'
-version = '2.1.1-dev.7'
+version = '2.2.0-dev.1'
 
 repositories {
 	mavenCentral()
