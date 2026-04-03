@@ -161,8 +161,9 @@ jobs: # Définition des jobs (briques)
           docker tag ghcr.io/$REPO:$TAG workshop-front
       - name: Install Playwright
         run: |
-          npm install --global playwright
-          playwright install --with-deps chromium
+          cd "$ANGULAR_DIR"
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
       - name: Validate frontend with docker-compose
         run: |
           cd "$ANGULAR_DIR"
