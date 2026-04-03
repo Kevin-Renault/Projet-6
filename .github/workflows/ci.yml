@@ -143,6 +143,10 @@ jobs: # Définition des jobs (briques)
         uses: actions/checkout@v4
       - name: Load shared path config
         run: ./scripts/load-path-env.sh
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -155,13 +159,49 @@ jobs: # Définition des jobs (briques)
           TAG=frontend-$(echo ${{ github.ref_name }} | tr '/' '-')-${{ github.sha }}
           docker pull ghcr.io/$REPO:$TAG
           docker tag ghcr.io/$REPO:$TAG workshop-front
-      # Vérifie que l'image publiée sert bien l'application via le compose frontend.
+      - name: Install Playwright
+        run: |
+          npm install --global playwright
+          playwright install --with-deps chromium
       - name: Validate frontend with docker-compose
         run: |
           cd "$ANGULAR_DIR"
           docker compose -f docker-compose.yml up -d
-          sleep 60
-          curl -f http://localhost || (docker compose logs front && exit 1)
+          node <<'NODE'
+          const { chromium } = require('playwright');
+
+          (async () => {
+            const browser = await chromium.launch({ args: ['--no-sandbox'] });
+            const page = await browser.newPage();
+
+            for (let attempt = 0; attempt < 30; attempt += 1) {
+              try {
+                await page.goto('http://localhost', { waitUntil: 'networkidle' });
+
+                const titleText = await page.textContent('h2');
+                const loadedText = await page.textContent('p');
+
+                if (
+                  titleText?.trim() === 'Olympic games app' &&
+                  loadedText?.includes('data loaded')
+                ) {
+                  await browser.close();
+                  process.exit(0);
+                }
+              } catch (error) {
+                // Retry while the app finishes starting.
+              }
+
+              await new Promise((resolve) => setTimeout(resolve, 2000));
+            }
+
+            await browser.close();
+            throw new Error('Home page content not found on http://localhost');
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
           docker compose down
          
   merge-report:
