@@ -41,6 +41,52 @@ jobs:
       - name: Install dependencies
         run: npm install --global semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/commit-analyzer @semantic-release/exec @semantic-release/release-notes-generator
 
+      - name: Build and start Docker stack
+        run: docker compose up -d --build
+
+      - name: Install Playwright
+        run: |
+          npm install --global playwright
+          playwright install --with-deps chromium
+
+      - name: Verify front home page content
+        run: |
+          node <<'NODE'
+          const { chromium } = require('playwright');
+
+          (async () => {
+            const browser = await chromium.launch({ args: ['--no-sandbox'] });
+            const page = await browser.newPage();
+
+            for (let attempt = 0; attempt < 30; attempt += 1) {
+              try {
+                await page.goto('http://localhost', { waitUntil: 'networkidle' });
+
+                const titleText = await page.textContent('h2');
+                const loadedText = await page.textContent('p');
+
+                if (
+                  titleText?.trim() === 'Olympic games app' &&
+                  loadedText?.includes('data loaded')
+                ) {
+                  await browser.close();
+                  process.exit(0);
+                }
+              } catch (error) {
+                // Retry while the app finishes starting.
+              }
+
+              await new Promise((resolve) => setTimeout(resolve, 2000));
+            }
+
+            await browser.close();
+            throw new Error('Home page content not found on http://localhost');
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
