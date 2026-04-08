@@ -1,4 +1,4 @@
-# [2.3.0-dev.2](https://github.com/Kevin-Renault/Projet-6/compare/v2.3.0-dev.1...v2.3.0-dev.2) (2026-04-08)
+## [2.3.1-dev.1](https://github.com/Kevin-Renault/Projet-6/compare/v2.3.0...v2.3.1-dev.1) (2026-04-08)
 
 
 ### Bug Fixes
@@ -9,7 +9,7 @@
 * **frontend:** copy angular build output from browser dir ([45a506d](https://github.com/Kevin-Renault/Projet-6/commit/45a506d0b5c34cf9a5041991027e2e3d43601b4d))
 * **frontend:** update nginx static file copy for angular build ([969d8fa](https://github.com/Kevin-Renault/Projet-6/commit/969d8fa58cc443fe5b758459b5cda9809b4f6a23))
 
-# [2.3.0-dev.1](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0...v2.3.0-dev.1) (2026-04-08)
+# [2.3.0](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0...v2.3.0) (2026-04-08)
 
 
 ### Features
