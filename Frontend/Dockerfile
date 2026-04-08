@@ -5,8 +5,10 @@ COPY . .
 RUN npm install
 RUN npm run build --prod
 
-# Serveur Nginx pour le front
 FROM nginx:alpine
-COPY --from=build /app/dist/olympic-games-starter/ /usr/share/nginx/html
+# Supprimez l'index.html par défaut d'Nginx
+RUN rm -f /usr/share/nginx/html/index.html
+# Copiez votre app Angular
+COPY --from=build /app/dist/olympic-games-starter/ /usr/share/nginx/html/
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
