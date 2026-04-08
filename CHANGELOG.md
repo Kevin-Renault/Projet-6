@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0...v2.3.0) (2026-04-08)
+
+
+### Features
+
+* align  docs ([dadd1ff](https://github.com/Kevin-Renault/Projet-6/commit/dadd1fffe4289070114378878178367b00540102))
+
 # [2.2.0](https://github.com/Kevin-Renault/Projet-6/compare/v2.1.0...v2.2.0) (2026-03-31)
 
 
