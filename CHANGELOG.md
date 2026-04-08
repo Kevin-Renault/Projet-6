@@ -1,3 +1,14 @@
+# [2.3.0-dev.2](https://github.com/Kevin-Renault/Projet-6/compare/v2.3.0-dev.1...v2.3.0-dev.2) (2026-04-08)
+
+
+### Bug Fixes
+
+* **backend:** target workshopsdb in postgres healthcheck ([283fc0b](https://github.com/Kevin-Renault/Projet-6/commit/283fc0ba1772745fe29d004778c471bdde8ac68c))
+* **ci:** playwright ([794be4b](https://github.com/Kevin-Renault/Projet-6/commit/794be4b4aba0a9bfb982209c1dfa1518b0834d61))
+* **ci:** set postgres healthcheck to target workshopsdb ([d37cb00](https://github.com/Kevin-Renault/Projet-6/commit/d37cb00ac0bf9209dcc7640684bfb632d3df5dce))
+* **frontend:** copy angular build output from browser dir ([45a506d](https://github.com/Kevin-Renault/Projet-6/commit/45a506d0b5c34cf9a5041991027e2e3d43601b4d))
+* **frontend:** update nginx static file copy for angular build ([969d8fa](https://github.com/Kevin-Renault/Projet-6/commit/969d8fa58cc443fe5b758459b5cda9809b4f6a23))
+
 # [2.3.0-dev.1](https://github.com/Kevin-Renault/Projet-6/compare/v2.2.0...v2.3.0-dev.1) (2026-04-08)
 
 
