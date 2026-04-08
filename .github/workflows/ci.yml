@@ -82,8 +82,17 @@ jobs: # Définition des jobs (briques)
         run: |
           cd "$ANGULAR_DIR"
           docker compose -f docker-compose.yml up -d --build front
-          curl -f http://localhost || (docker compose logs front && exit 1)
+          for i in {1..30}; do
+            if curl -fsS http://localhost; then
+              docker compose down
+              exit 0
+            fi
+            sleep 2
+          done
+
+          docker compose logs front
           docker compose down
+          exit 1
 
   # Publie uniquement après succès des validations backend et frontend.
   release:
