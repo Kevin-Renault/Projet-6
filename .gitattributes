@@ -1,0 +1,5 @@
+# Keep branch-specific release metadata on merges.
+# Each branch owns its own version string and changelog.
+Frontend/package.json merge=ours
+Backend/build.gradle merge=ours
+CHANGELOG.md merge=ours
