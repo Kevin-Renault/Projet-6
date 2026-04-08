@@ -9,6 +9,6 @@ FROM nginx:alpine
 # Supprimez l'index.html par défaut d'Nginx
 RUN rm -f /usr/share/nginx/html/index.html
 # Copiez votre app Angular
-COPY --from=build /app/dist/olympic-games-starter/ /usr/share/nginx/html/
+COPY --from=build /app/dist/olympic-games-starter/browser/ /usr/share/nginx/html/
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
