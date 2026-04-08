@@ -61,8 +61,24 @@ Ce dépot utilise un pipeline GitHub Actions réutilisable (`.github/workflows/c
 
 - Nous utilisons `semantic-release` avec les conventions Conventional Commits pour déterminer `major`, `minor`, `patch` sans intervention manuelle.
 - Les commits `fix:` déclenchent un patch (`vX.Y.Z`), `feat:` un minor, et `BREAKING CHANGE` une release majeure.
-- Les branches `main` et `dev` sont déclarées dans `.github/release.config.js` ; `main` publie des releases stables (tags `vX.Y.Z`), `dev` génère des prereleases (`vX.Y.Z-dev.N`).
+- Les branches `main` et `dev` sont déclarées dans `.github/semantic-release.yml` ; `main` publie des releases stables (tags `vX.Y.Z`), `dev` génère des prereleases (`vX.Y.Z-dev.N`).
 - Exemple de commande pour créer un commit visible dans le changelog : `git commit -am "feat: align release docs"`.
+
+### Gestion manuelle des conflits de version
+
+- Les fichiers `Frontend/package.json`, `Backend/build.gradle` et `CHANGELOG.md` sont versionnés sur les deux branches et peuvent donc provoquer un conflit lors d’une PR entre `dev` et `main`.
+- Si la PR part de `dev` vers `main`, il faut conserver la version stable de `main` dans ces fichiers.
+- Si la PR part de `main` vers `dev`, il faut conserver la version prerelease de `dev` dans ces fichiers.
+- La règle `.gitattributes` aide les merges locaux, mais GitHub peut quand même afficher un conflit sur la PR tant que les deux branches portent des versions différentes.
+- En cas de conflit, résous-le en gardant la valeur de la branche cible, puis termine la PR ou le merge normalement.
+
+### Procédure pour couper semantic-release sur `dev`
+
+- Retire `dev` de la liste `branches` dans [`.github/semantic-release.yml`](.github/semantic-release.yml) pour empêcher `semantic-release` de publier sur cette branche.
+- Si le job de release est déclenché par la CI, limite-le à `main` dans le workflow afin que `dev` ne lance plus le traitement sémantique.
+- Une fois désactivé, `dev` ne doit plus générer de tag, de changelog de release, ni de version prerelease automatique.
+- Si tu veux remettre `semantic-release` sur `dev` plus tard, rajoute simplement `dev` dans la liste `branches` et réactive le déclenchement du job de release pour cette branche.
+- Tant que `dev` est coupée du traitement sémantique, garde les fichiers de version au même état que la branche cible lors des merges pour éviter des conflits inutiles.
 
 L’étape `merge-report` souhaite expliciter le résultat des tests : elle télécharge l’artéfact `test-results-all`, liste son contenu et extrait la partie texte de `Report-summary.xml` pour l’insérer dans `GITHUB_STEP_SUMMARY`.
 
