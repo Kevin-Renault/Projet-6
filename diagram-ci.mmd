@@ -1,0 +1,52 @@
+flowchart TB
+    A[push / pull_request] --> B[setup]
+    B --> C[test-application]
+    C --> C1[Checkout]
+    C1 --> C2[Setup Java 21 + cache Gradle]
+    C2 --> C3[Setup Node 24 + cache npm]
+    C3 --> C4[run-tests.sh]
+    C4 --> C5[Tests backend Gradle]
+    C4 --> C6[Tests frontend Angular]
+    C5 --> C7[Upload artifacts JUnit]
+    C6 --> C7
+
+    C7 --> P{Lancement des validations Docker}
+
+    P --> D
+    P --> E
+
+    subgraph PAR[Validations Docker en parallele]
+        direction TB
+        D[validate-docker-backend]
+        D --> D1[Checkout]
+        D1 --> D2[load-path-env.sh]
+        D2 --> D3[docker compose up -d --build]
+        D3 --> D4[Boucle 30 x verification Swagger]
+        D4 --> D5[Controle de title Swagger UI sur :8080]
+        D5 --> D6[docker compose down]
+
+        E[validate-docker-frontend]
+        E --> E1[Checkout]
+        E1 --> E2[load-path-env.sh]
+        E2 --> E3[docker compose up -d --build front]
+        E3 --> E4[Boucle 30 x verification IHM]
+        E4 --> E41[Controle du title et de app-root sur :80]
+        E41 --> E42[Controle route SPA inconnue]
+        E42 --> E5[docker compose down]
+    end
+
+    D6 --> J{Les 2 validations Docker ont reussi}
+    E5 --> J
+
+    J --> F[release]
+    J --> G[merge-report]
+
+    F -->|push main/dev seulement| F1[semantic-release]
+    F1 --> F2[Publish package frontend]
+    F1 --> F3[Publish package backend]
+    F2 --> F4[Build and push image backend GHCR]
+    F3 --> F5[Build and push image frontend GHCR]
+
+    G --> G1[Download test artifacts]
+    G1 --> G2[Build GitHub Step Summary]
+    G2 --> H[cleanup]

@@ -57,6 +57,84 @@ Ce dépot utilise un pipeline GitHub Actions réutilisable (`.github/workflows/c
 - valider les images via `docker compose up` + vérification d’un endpoint,
 - fusionner tous les rapports JUnit (`test-results/*.xml`) dans `Report-summary.xml` puis afficher un résumé directement dans la page GitHub Actions à l’aide du job `merge-report`.
 
+### Schéma exact du pipeline actuel
+
+Source éditable du diagramme : `diagram-ci.mmd`
+
+```mermaid
+flowchart TB
+   A[push / pull_request] --> B[setup]
+   B --> C[test-application]
+   C --> C1[Checkout]
+   C1 --> C2[Setup Java 21 + cache Gradle]
+   C2 --> C3[Setup Node 24 + cache npm]
+   C3 --> C4[run-tests.sh]
+   C4 --> C5[Tests backend Gradle]
+   C4 --> C6[Tests frontend Angular]
+   C5 --> C7[Upload artifacts JUnit]
+   C6 --> C7
+
+   C7 --> P{Lancement des validations Docker}
+
+   P --> D
+   P --> E
+
+   subgraph PAR[Validations Docker en parallele]
+      direction TB
+      D[validate-docker-backend]
+      D --> D1[Checkout]
+      D1 --> D2[load-path-env.sh]
+      D2 --> D3[docker compose up -d --build]
+      D3 --> D4[Boucle 30 x verification Swagger]
+      D4 --> D5[Controle de title Swagger UI sur :8080]
+      D5 --> D6[docker compose down]
+
+      E[validate-docker-frontend]
+      E --> E1[Checkout]
+      E1 --> E2[load-path-env.sh]
+      E2 --> E3[docker compose up -d --build front]
+      E3 --> E4[Boucle 30 x verification IHM]
+      E4 --> E41[Controle du title et de app-root sur :80]
+      E41 --> E42[Controle route SPA inconnue]
+      E42 --> E5[docker compose down]
+   end
+
+   D6 --> J{Les 2 validations Docker ont reussi}
+   E5 --> J
+
+   J --> F[release]
+   J --> G[merge-report]
+
+   F -->|push main/dev seulement| F1[semantic-release]
+   F1 --> F2[Publish package frontend]
+   F1 --> F3[Publish package backend]
+   F2 --> F4[Build and push image backend GHCR]
+   F3 --> F5[Build and push image frontend GHCR]
+
+   G --> G1[Download test artifacts]
+   G1 --> G2[Build GitHub Step Summary]
+   G2 --> H[cleanup]
+```
+
+Seules les deux validations Docker sont parallèles. Les jobs `release` et `merge-report` attendent tous les deux la réussite du backend et du frontend.
+
+### Son enchaînement réel
+
+Le workflow démarre toujours par le job `test-application`, qui exécute `run-tests.sh` pour lancer les tests backend et frontend puis publier les rapports JUnit.
+
+Une fois ces tests terminés, deux validations Docker partent en parallèle :
+- `validate-docker-backend` reconstruit l’image backend via `Backend/docker-compose.yml`, démarre la stack backend puis tente jusqu’à 30 fois de charger `http://localhost:8080/` en vérifiant la présence de `<title>Swagger UI</title>`.
+- `validate-docker-frontend` reconstruit l’image frontend via `Frontend/docker-compose.yml`, démarre le service `front`, puis tente jusqu’à 30 fois de vérifier que `http://localhost/` contient `<title>Olympic Games App</title>` et `<app-root></app-root>`, ainsi qu’une route SPA inconnue (`/ci-route-check`).
+
+Concrètement, la CI contrôle donc maintenant explicitement :
+- l’accès à Swagger sur `http://localhost:8080/`,
+- l’accès à l’IHM sur `http://localhost/`,
+- et la bonne configuration SPA du frontend via une route inconnue qui doit retomber sur l’index Angular.
+
+Le job `release` ne s’exécute que sur `push` vers `main` ou `dev`, et uniquement si les deux validations Docker ont réussi. Il calcule la version avec `semantic-release`, publie les packages applicatifs, puis construit et pousse les images Docker versionnées sur GitHub Container Registry.
+
+En parallèle de la release, `merge-report` télécharge les artefacts de tests et injecte un résumé lisible dans l’onglet GitHub Actions. Enfin, `cleanup` se lance systématiquement après `merge-report`.
+
 ### Versionning automatique
 
 - Nous utilisons `semantic-release` avec les conventions Conventional Commits pour déterminer `major`, `minor`, `patch` sans intervention manuelle.
