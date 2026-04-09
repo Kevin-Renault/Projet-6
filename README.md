@@ -131,6 +131,20 @@ Concrètement, la CI contrôle donc maintenant explicitement :
 - l’accès à l’IHM sur `http://localhost/`,
 - et la bonne configuration SPA du frontend via une route inconnue qui doit retomber sur l’index Angular.
 
+### Lecture des logs de validation Docker
+
+Les jobs de validation backend et frontend affichent maintenant chaque tentative dans les logs GitHub Actions afin de distinguer un démarrage lent d’un vrai échec.
+
+Exemples de messages attendus :
+- backend : `[backend] Tentative 1/30 : vérification de Swagger sur http://localhost:8080/`
+- backend : `[backend] Swagger n'est pas encore prêt. Nouvelle tentative dans 2 secondes.`
+- backend : `[backend] Swagger est disponible.`
+- frontend : `[frontend] Tentative 1/30 : vérification de l'IHM sur http://localhost/`
+- frontend : `[frontend] L'IHM n'est pas encore prête. Nouvelle tentative dans 2 secondes.`
+- frontend : `[frontend] L'IHM Angular répond correctement.`
+
+Pendant les premières secondes, il est normal de voir des erreurs transitoires de type `curl: (52) Empty reply from server` ou `curl: (56) Recv failure: Connection reset by peer`, en particulier côté backend pendant le démarrage de Spring Boot. La validation est considérée comme réussie dès qu'une tentative trouve le contenu attendu avant la limite des 30 essais.
+
 Le job `release` ne s’exécute que sur `push` vers `main` ou `dev`, et uniquement si les deux validations Docker ont réussi. Il calcule la version avec `semantic-release`, publie les packages applicatifs, puis construit et pousse les images Docker versionnées sur GitHub Container Registry.
 
 En parallèle de la release, `merge-report` télécharge les artefacts de tests et injecte un résumé lisible dans l’onglet GitHub Actions. Enfin, `cleanup` se lance systématiquement après `merge-report`.
