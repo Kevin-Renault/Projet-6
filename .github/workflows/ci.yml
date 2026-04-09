@@ -64,9 +64,18 @@ jobs: # Définition des jobs (briques)
         run: |
           cd "$JAVA_DIR"
           docker compose -f docker-compose.yml up -d --build
-          sleep 60
-          (curl -f http://localhost:8080/actuator/health || curl -f http://localhost:8080/) || (docker compose logs app && exit 1)
+          for i in {1..30}; do
+            SWAGGER_PAGE=$(curl -fsS http://localhost:8080/ || true)
+            if printf '%s' "$SWAGGER_PAGE" | grep -q '<title>Swagger UI</title>'; then
+              docker compose down
+              exit 0
+            fi
+            sleep 2
+          done
+
+          docker compose logs app
           docker compose down
+          exit 1
 
   # Reconstruit le frontend en image Docker avant la validation locale.
   validate-docker-frontend:
@@ -83,7 +92,11 @@ jobs: # Définition des jobs (briques)
           cd "$ANGULAR_DIR"
           docker compose -f docker-compose.yml up -d --build front
           for i in {1..30}; do
-            if curl -fsS http://localhost; then
+            ROOT_PAGE=$(curl -fsS http://localhost/ || true)
+            ROUTE_PAGE=$(curl -fsS http://localhost/ci-route-check || true)
+            if printf '%s' "$ROOT_PAGE" | grep -q '<title>Olympic Games App</title>' \
+              && printf '%s' "$ROOT_PAGE" | grep -q '<app-root></app-root>' \
+              && printf '%s' "$ROUTE_PAGE" | grep -q '<title>Olympic Games App</title>'; then
               docker compose down
               exit 0
             fi
