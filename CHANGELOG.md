@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/Kevin-Renault/Projet-6/compare/v2.3.2...v2.4.0) (2026-04-10)
+
+
+### Features
+
+* test for major version ([0df2505](https://github.com/Kevin-Renault/Projet-6/commit/0df25052e320e02085d2ebf06f72e140a80f9924))
+
 ## [2.3.2](https://github.com/Kevin-Renault/Projet-6/compare/v2.3.1...v2.3.2) (2026-04-10)
 
 
