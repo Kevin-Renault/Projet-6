@@ -1,9 +1,9 @@
-# [2.4.0-dev.2](https://github.com/Kevin-Renault/Projet-6/compare/v2.4.0-dev.1...v2.4.0-dev.2) (2026-04-10)
+# [2.4.0](https://github.com/Kevin-Renault/Projet-6/compare/v2.3.2...v2.4.0) (2026-04-10)
 
 
 ### Features
 
-* BREAKING CHANGE ([5ffa6b2](https://github.com/Kevin-Renault/Projet-6/commit/5ffa6b2e6da83aebc39b23f0ae86f108303e3dc7))
+* test for major version ([0df2505](https://github.com/Kevin-Renault/Projet-6/commit/0df25052e320e02085d2ebf06f72e140a80f9924))
 
 ## [2.3.2](https://github.com/Kevin-Renault/Projet-6/compare/v2.3.1...v2.3.2) (2026-04-10)
 
