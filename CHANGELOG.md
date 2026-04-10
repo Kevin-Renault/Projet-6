@@ -1,3 +1,15 @@
+# [2.4.0-dev.1](https://github.com/Kevin-Renault/Projet-6/compare/v2.3.1...v2.4.0-dev.1) (2026-04-10)
+
+
+### Bug Fixes
+
+* test for minor version ([e588be3](https://github.com/Kevin-Renault/Projet-6/commit/e588be38efcc63e45e9801ae0c212c90d0e55fe1))
+
+
+### Features
+
+* test for major version ([0df2505](https://github.com/Kevin-Renault/Projet-6/commit/0df25052e320e02085d2ebf06f72e140a80f9924))
+
 ## [2.3.1](https://github.com/Kevin-Renault/Projet-6/compare/v2.3.0...v2.3.1) (2026-04-08)
 
 
