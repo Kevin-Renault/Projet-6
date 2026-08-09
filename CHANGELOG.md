@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/Kevin-Renault/Projet-6/compare/v2.5.0...v3.0.0) (2026-08-09)
+
+
+### Features
+
+* test semantic ([9415666](https://github.com/Kevin-Renault/Projet-6/commit/9415666af5a14bed722644cab65b47a1021686e5))
+
+
+### BREAKING CHANGES
+
+* test semantic
+
 # [2.5.0](https://github.com/Kevin-Renault/Projet-6/compare/v2.4.0...v2.5.0) (2026-04-10)
 
 
