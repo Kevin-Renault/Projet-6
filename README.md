@@ -1,7 +1,9 @@
 # Projet 6 – Déploiement Frontend & Backend avec Docker
 
 
+
 Ce dépôt contient l’ensemble des livrables pour le projet 6 : l’application Angular (frontend) et l’application Java Spring Boot (backend), toutes deux prêtes à être conteneurisées et orchestrées avec Docker.
+
 
 
 
